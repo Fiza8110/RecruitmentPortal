@@ -1,0 +1,50 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    background-image: url('assets/can1.png'); /* Replace with your image path */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+}
+
+.dashboard-container {
+    text-align: center;
+    border: 2px solid #333; /* Border for the container */
+    border-radius: 8px;
+    padding: 3rem;
+    width: 350px; /* Small container width */
+    background-color: transparent; /* No background color */
+    margin-left: 38%;
+    margin-top: 18%;
+}
+
+.dashboard-header {
+    margin: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: black; /* Dark text color */
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Space between buttons */
+}
+
+.dashboard-btn {
+    border: 2px solid black; /* Border for buttons */
+    background-color: transparent; /* Transparent background */
+    color: black; /* Blue text color */
+    font-size: 1rem;
+    padding: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dashboard-btn:hover {
+    background-color: #007BFF; /* Blue background on hover */
+    color: white; /* White text on hover */
+}

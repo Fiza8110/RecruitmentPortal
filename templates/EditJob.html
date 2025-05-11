@@ -1,0 +1,123 @@
+<!-- templates/EditJob.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Job</title>
+  <link rel="stylesheet" href="../static/Css/Dashboard.css">
+  <style>
+    .card {
+      position: relative;
+      max-width: 100%;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background: #fff;
+    }
+
+    .field {
+      margin-bottom: 1rem;
+    }
+
+    .field label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+      font-size: 15px;
+    }
+
+    .field input, .field textarea {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn.save {
+      background-color:  rgb(134, 131, 185);;
+      color: #fff;
+    }
+
+    .btn.cancel {
+      background-color: #e74c3c;
+      color: #fff;
+    }
+  </style>
+</head>
+<body style="background-color: lavender;">
+  <div class="card">
+    <h1>Edit Job</h1>
+    <form id="editJobForm">
+      <input type="hidden" name="job_id" value="{{ job._id }}" />
+
+      <div class="field">
+        <label for="Job_Title">Job Title</label>
+        <input type="text" name="Job_Title" value="{{ job.Job_Title }}" required />
+      </div>
+
+      <div class="field">
+        <label for="Job_Description">Description</label>
+        <textarea name="Job_Description" rows="4" required>{{ job.Job_Description }}</textarea>
+      </div>
+
+      <div class="field">
+        <label for="Skills">Skills</label>
+        <input type="text" name="Skills" value="{{ job.Skills }}" required />
+      </div>
+
+      <div class="field">
+        <label for="Location">Location</label>
+        <input type="text" name="Location" value="{{ job.Location }}" required />
+      </div>
+
+      <div class="field">
+        <label for="Experience">Experience</label>
+        <input type="text" name="Experience" value="{{ job.Experience }}" required />
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="btn save">Save</button>
+        <button type="button" class="btn cancel" onclick="window.history.back()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('editJobForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+
+      const response = await fetch(`/updateJob/${data.job_id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        alert("Job updated successfully!");
+        window.location.href = `/jobDetails/${data.job_id}`;
+      } else {
+        alert("Failed to update job: " + result.detail);
+      }
+    });
+  </script>
+</body>
+</html>

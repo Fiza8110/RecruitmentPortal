@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Candidate</title>
+  <link rel="stylesheet" href="/static/css/AddCandidate.css" />
+  <style>
+    .dropdown-container {
+      position: relative;
+      width: 100%;
+    }
+
+    .dropdown {
+      position: absolute;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      max-height: 180px;
+      overflow-y: auto;
+      width: 100%;
+      min-width: 200px;
+      max-width: 300px;
+      z-index: 10;
+      padding: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      font-size: 14px;
+      border-radius: 6px;
+    }
+
+    .dropdown label {
+      display: block;
+      margin-bottom: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+
+<body style="background-color: lavender;">
+  {% include 'Navbar.html' %}
+  <main class="form-container" style="background-color: lavender;">
+    <form action="/add-candidate" method="post" enctype="multipart/form-data" class="candidate-form">
+      <h2>Add Candidate</h2>
+
+      <div class="form-group">
+        <label for="job_title">Job Title <span class="required">*</span></label>
+        <div class="dropdown-container">
+          <input type="text" id="job_title_display" placeholder="Select job title" readonly onclick="toggleDropdown()"
+            required />
+          <input type="hidden" id="job_title_hidden" name="job_title" required />
+
+          <div id="jobDropdown" class="dropdown" style="display: none;">
+            {% for title in job_titles %}
+            <label>
+              <input type="radio" name="job_checkbox" value="{{ title }}" onchange="updateJobTitle()"> {{ title }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="first_name">First Name <span class="required">*</span></label>
+        <input type="text" id="first_name" name="first_name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="last_name">Last Name <span class="required">*</span></label>
+        <input type="text" id="last_name" name="last_name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email <span class="required">*</span></label>
+        <input type="email" id="email" name="email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="mobile">Mobile Number <span class="required">*</span></label>
+        <input type="tel" id="mobile" name="mobile" pattern="[0-9]{10}" maxlength="10"
+          oninput="restrictToNumbers(event)" required />
+      </div>
+
+      <div class="form-group">
+        <label>Currently Employed? <span class="required">*</span></label>
+        <div class="radio-group">
+          <label><input type="radio" name="current_employee" value="yes" required
+              onclick="toggleEmploymentFields(true)"> Yes</label>
+          <label><input type="radio" name="current_employee" value="no" required
+              onclick="toggleEmploymentFields(false)"> No</label>
+        </div>
+      </div>
+
+      <div id="employmentDetails" style="display: none;">
+        <div class="form-group">
+          <label for="company_name">Company Name <span style="color: red;">*</span></label>
+          <input type="text" id="company_name" name="company_name" />
+        </div>
+
+        <div class="form-group">
+          <label for="company_location">Company Location <span style="color: red;">*</span></label>
+          <input type="text" id="company_location" name="company_location" />
+        </div>
+
+        <div class="form-group">
+          <label for="experience">Experience (in years) <span style="color: red;">*</span></label>
+          <input type="number" id="experience" name="experience" min="0" />
+        </div>
+
+        <div class="form-group">
+          <label for="current_ctc">Current CTC <span style="color: red;">*</span></label>
+          <input type="text" id="current_ctc" name="current_ctc" />
+        </div>
+
+        <div class="form-group">
+          <label for="expected_ctc">Expected CTC <span style="color: red;">*</span></label>
+          <input type="text" id="expected_ctc" name="expected_ctc" />
+        </div>
+
+        <div class="form-group">
+          <label for="notice_period">Notice Period (in days) <span style="color: red;">*</span></label>
+          <input type="number" id="notice_period" name="notice_period" min="0" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="resume">Resume (PDF only) <span style="color: red;">*</span></label>
+        <input type="file" id="resume" name="resume" accept=".pdf" required />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit">Submit</button>
+        <button type="button" onclick="window.location.href='/viewApplications'">Cancel</button>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    function toggleDropdown() {
+      const dropdown = document.getElementById("jobDropdown");
+      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    }
+
+    function updateJobTitle() {
+      const selected = document.querySelector('input[name="job_checkbox"]:checked');
+      const value = selected ? selected.value : "";
+
+      document.getElementById("job_title_display").value = value;
+      document.getElementById("job_title_hidden").value = value;
+
+      // Optional: close dropdown after selection
+      document.getElementById("jobDropdown").style.display = "none";
+    }
+
+    function toggleEmploymentFields(isEmployed) {
+      document.getElementById("employmentDetails").style.display = isEmployed ? "block" : "none";
+    }
+
+    function restrictToNumbers(event) {
+      event.target.value = event.target.value.replace(/\D/g, '');
+    }
+
+    // Close dropdown when clicking outside
+    window.addEventListener("click", function (e) {
+      const container = document.querySelector(".dropdown-container");
+      if (!container.contains(e.target)) {
+        document.getElementById("jobDropdown").style.display = "none";
+      }
+    });
+  </script>
+</body>
+
+</html>

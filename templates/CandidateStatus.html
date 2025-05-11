@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Candidate Status</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+    }
+
+    .candidate-info {
+      margin-bottom: 20px;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .candidate-info div {
+      margin: 5px 0;
+    }
+
+    .chart-container {
+      max-width: 700px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Candidate Status Overview</h2>
+
+  {% for candidate in candidates %}
+  <div class="candidate-info">
+    <div><strong>Name:</strong> {{application_data.first_name }} {{ application_data.last_name }}</div>
+    <div><strong>Email:</strong> {{application_data.email}}</div>
+    <div><strong>Job Title:</strong> {{ application_data.job_title }}</div>
+    <div><strong>Status:</strong> {{ application_data.status }}</div>
+  </div>
+  {% endfor %}
+
+  <div class="chart-container">
+    <canvas id="statusChart"></canvas>
+  </div>
+
+  <script>
+    const candidates = JSON.parse('{{ candidates_json | safe }}');
+    console.log(candidates); // Test: see if it's loaded
+    const statusCounts = {
+      Applied: 0,
+      Reviewed: 0,
+      Interviewed: 0,
+      Shortlisted: 0,
+      Selected: 0
+    };
+
+    candidates.forEach(candidate => {
+      const status = candidate.status;
+      if (statusCounts.hasOwnProperty(status)) {
+        statusCounts[status]++;
+      }
+    });
+
+    const ctx = document.getElementById('statusChart').getContext('2d');
+    const statusChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: Object.keys(statusCounts),
+        datasets: [{
+          label: 'Number of Candidates',
+          data: Object.values(statusCounts),
+          backgroundColor: ['#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: 'Candidate Status Distribution'
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            precision: 0
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+
+</html>

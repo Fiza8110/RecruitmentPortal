@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Responsive Navbar</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <style>
+    .search-container {
+      position: relative;
+      width: 250px;
+    }
+
+    .search-container input {
+      width: 100%;
+      height: 40px;
+      padding-left: 40px;
+      border-radius: 40px;
+      font-family: Poppins;
+      font-weight: 400;
+      font-size: 14px;
+      color: black;
+    }
+
+    .search-container .search-icon {
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      color: gray;
+      pointer-events: none;
+      margin-left: 120px;
+    }
+
+    nav.navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: white;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    body {
+      padding-top: 70px;
+      overflow-x: hidden;
+    }
+
+    .nav-item .nav-link {
+      border-radius: 25px;
+      padding: 10px 20px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .navbar-nav .nav-item:not(:last-child) {
+      margin-right: 15px;
+    }
+
+    .nav-item.active .nav-link {
+      background-color: rgb(134, 131, 185);
+      color: white;
+      border-radius: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 80px;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="">Recruitment Portal</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="navItems">
+          <!-- Nav items will be dynamically inserted here -->
+        </ul>
+
+        <!-- Search Container -->
+        <div class="search-container" id="searchContainer" style="display: none;">
+          <input id="search-bar" type="text" class="form-control" placeholder="Search" style="margin-left: -38px;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-search search-icon" viewBox="0 0 16 16">
+            <path
+              d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0">
+            </path>
+          </svg>
+        </div>
+
+        <button class="btn btn-danger d-flex align-items-center ms-3" onclick="logout()">
+          <i class="bi bi-box-arrow-right me-1"></i> Logout
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const navItems = document.getElementById("navItems");
+      const role = localStorage.getItem("role");
+
+      let navLinks = "";
+
+      if (role === "user") {
+        navLinks = `
+          <li class="nav-item">
+            <a class="nav-link" href="/dashboard">
+              <i class="bi bi-house-door"></i> Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/candidatestatus">
+              <i class="bi bi-person-check"></i> Show Candidate Status
+            </a>
+          </li>
+        `;
+      } else {
+        navLinks = `
+          <li class="nav-item">
+            <a class="nav-link" href="/viewApplications">
+              <i class="bi bi-eye"></i> View Applications
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/postnewjob">
+              <i class="bi bi-plus-circle"></i> Post Job
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/joblist">
+              <i class="bi bi-list-ul"></i> Job List
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/add-candidate">
+              <i class="bi bi-person-plus"></i> Add Candidate
+            </a>
+          </li>
+        `;
+      }
+
+      if (navItems) {
+        navItems.innerHTML = navLinks;
+
+        setTimeout(() => {
+          const navLinksElements = document.querySelectorAll(".nav-item .nav-link");
+          const currentPath = window.location.pathname;
+
+          navLinksElements.forEach(link => {
+            const href = link.getAttribute('href');
+            if (
+              currentPath === href ||
+              (currentPath.startsWith("/viewDetails") && href === "/viewApplications") ||
+              (currentPath.startsWith("/apply-btn") && href === "/dashboard")
+            ) {
+              link.parentElement.classList.add("active");
+            }
+
+            link.addEventListener("click", function () {
+              navLinksElements.forEach(item => item.parentElement.classList.remove("active"));
+              link.parentElement.classList.add("active");
+            });
+          });
+
+          // Show search container only on specific pages
+          const searchContainer = document.getElementById("searchContainer");
+          const visiblePaths = ["/dashboard", "/viewApplications", "/joblist"];
+          if (searchContainer && visiblePaths.includes(currentPath)) {
+            searchContainer.style.display = "block";
+          } else {
+            searchContainer.style.display = "none";
+          }
+        }, 50);
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("username");
+      localStorage.removeItem("email");
+      localStorage.removeItem("role");
+      window.location.href = "/login";
+    }
+  </script>
+
+</body>
+
+</html>

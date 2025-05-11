@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applications</title>
+  <link rel="stylesheet" href="../static/Css/Dashboard.css">
+  <!-- <link rel="stylesheet" href="/static/Css/Postnewjob.css"> -->
+</head>
+<body style="background-color: lavender;">
+  <!-- <header> -->
+    {% include 'Navbar.html' %}
+    <!-- <h1>Submitted Applications</h1>
+    <div class="search-container">
+     Logout Button -->
+      <!-- <button class="logout-btn" onclick="window.location.href='/login'">Logout</button>
+
+      Search Bar -->
+      <!-- <input type="text" id="search-bar" placeholder="Search">
+      <span class="search-icon">🔍</span>
+    </div>  -->
+  <!-- </header> -->
+
+  <div id="card-container">
+    {% for item in applications_list %}
+      <div class="card">
+        <h2>{{ item.job_title }}</h2>
+        <p>{{ item.first_name }} {{ item.last_name }}</p>
+        <p>{{ item.email }}</p>
+        
+
+        
+
+        <button class="apply-btn" onclick="window.location.href='/viewDetails/{{ item._id }}'">View Details</button>
+      </div>
+    {% endfor %}
+  </div>
+
+  <script>
+    
+    validateToken();
+    document.addEventListener('DOMContentLoaded', function() {
+      const searchInput = document.getElementById('search-bar');
+      const applicationCards = document.querySelectorAll('.card');
+      const noResultsMessage = document.getElementById('no-results-message');
+
+      // Function to perform the search
+      searchInput.addEventListener('input', function() {
+        const query = searchInput.value.toLowerCase(); // Convert the search query to lowercase for case-insensitive search
+        let resultsFound = false; // Flag to track if any results were found
+
+        applicationCards.forEach(card => {
+          const jobTitle = card.querySelector('h2').textContent.toLowerCase();
+          const firstName = card.querySelector('p').textContent.toLowerCase();
+          const email = card.querySelectorAll('p')[1].textContent.toLowerCase();
+
+          // Check if any of the fields match the search query
+          if (jobTitle.includes(query) || firstName.includes(query) || email.includes(query)) {
+            card.style.display = ''; // Show card if it matches the search
+            resultsFound = true; // Mark that a result was found
+          } else {
+            card.style.display = 'none'; // Hide card if it doesn't match
+          }
+        });
+
+        // If no results are found, show the "No results found" message
+        if (resultsFound) {
+          noResultsMessage.style.display = 'none';
+        } else {
+          noResultsMessage.style.display = 'block';
+        }
+      });
+    });
+
+    async function validateToken() {
+  const token = localStorage.getItem("access_token");
+
+  if (!token) {
+    alert("Unauthorized access. Please log in.");
+    window.location.href = "/login";
+
+  }
+
+}
+  </script>
+</body>
+</html>

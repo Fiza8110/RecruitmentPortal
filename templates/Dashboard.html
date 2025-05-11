@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Listings</title>
+  <!-- <link rel="stylesheet" href="/static/Css/Dashboard.css"> -->
+  <link rel="stylesheet" href="../static/Css/Dashboard.css">
+</head>
+
+<body style="background-color: lavender;">
+  <!-- <header> -->
+  <!-- <h1>Job Listings</h1>
+    <div class="search-container">
+      <button class="logout-btn" onclick="logout()">Logout</button>
+      <input type="text" id="search-bar" placeholder="Search">
+      <span class="search-icon">🔍</span>
+    </div> -->
+
+  {% include 'Navbar.html' %}
+  <!-- </header> -->
+
+  <main id="card-container">
+    {% for job in jobs_list %}
+    <div class="card">
+      <h2>{{ job.Job_Title }}</h2>
+      <p>{{ job.Job_Description }}</p>
+      <p><strong>Skills:</strong> {{ job.Skills }}</p>
+      <p><strong>Location:</strong> {{ job.Location }}</p>
+      <button class="apply-btn" data-title="{{ job.Job_Title }}">Apply Now</button>
+    </div>
+    {% endfor %}
+  </main>
+
+  <script>
+    validateToken();
+    // Handle "Apply Now" button click event
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll(".apply-btn").forEach((button) => {
+        button.addEventListener("click", (e) => {
+          const jobTitle = e.target.getAttribute("data-title");
+          localStorage.setItem("selectedJobTitle", jobTitle);
+          window.location.href = "/applayJob";
+        });
+      });
+
+      // Search functionality
+      const searchBar = document.getElementById("search-bar");
+      searchBar.addEventListener("input", () => {
+        const query = searchBar.value.toLowerCase();
+        document.querySelectorAll(".card").forEach((card) => {
+          const text = card.innerText.toLowerCase();
+          card.style.display = text.includes(query) ? "block" : "none";
+        });
+      });
+    });
+
+    async function validateToken() {
+      const token = localStorage.getItem("access_token");
+      // alert(token);
+      if (!token) {
+        alert("Unauthorized access. Please log in.");
+        window.location.href = "/login";
+
+      }
+
+    }
+
+    // function logout() {
+    //     // Remove access token and other user data
+    //     localStorage.removeItem("access_token");
+    //     localStorage.removeItem("username");
+    //     localStorage.removeItem("email");
+    //     localStorage.removeItem("role");
+
+    //     // Redirect to the login page
+    //     window.location.href = "/login";
+    // }
+
+
+  </script>
+
+</body>
+
+</html>

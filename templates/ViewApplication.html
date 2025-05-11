@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Application Details</title>
+  <link rel="stylesheet" href="../static/Css/Postnewjob.css">
+  <link rel="stylesheet" href="../static/Css/ViewApplication.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body style="background-color: lavender;">
+  {% include 'Navbar.html' %}
+  <div class="card">
+    <div id="details-container">
+      <div class="header-content">
+        <div class="action-icons">
+          <i class="fas fa-times action-icon icon-cancel" data-tooltip="Cancel" onclick="handleCancel()"></i>
+          <i class="fas fa-trash action-icon icon-delete" data-tooltip="Delete"
+            onclick="confirmDelete('{{ application_data._id }}')"></i>
+        </div>
+        <h2>{{ application_data.job_title }}</h2>
+
+      </div>
+
+      <div class="detail-row"><strong>First Name:</strong> <span>{{ application_data.first_name }}</span></div>
+      <div class="detail-row"><strong>Last Name:</strong> <span>{{ application_data.last_name }}</span></div>
+      <div class="detail-row"><strong>Email:</strong> <span>{{ application_data.email }}</span></div>
+      <div class="detail-row"><strong>Phone:</strong> <span>{{ application_data.mobile }}</span></div>
+
+      {% if application_data.current_employee == "yes" %}
+      <div class="detail-row"><strong>Current Employee:</strong> <span>Yes</span></div>
+      <div class="detail-row"><strong>Company Name:</strong> <span>{{ application_data.company_name }}</span></div>
+      <div class="detail-row"><strong>Company Location:</strong> <span>{{ application_data.company_location }}</span>
+      </div>
+      <div class="detail-row"><strong>Current CTC:</strong> <span>{{ application_data.current_ctc }}</span></div>
+      <div class="detail-row"><strong>Expected CTC:</strong> <span>{{ application_data.expected_ctc }}</span></div>
+      <div class="detail-row"><strong>Notice Period:</strong> <span>{{ application_data.notice_period }}</span></div>
+      {% else %}
+      <div class="detail-row"><strong>Current Employee:</strong> <span>No</span></div>
+      <p>This candidate doesn't have any experience.</p>
+      {% endif %}
+    </div>
+
+    <button class="btn" id="rejectApplicationBtn" onclick="openModal(event)">Reject Application</button>
+    <button class="btn" id="scheduleInterviewBtn" onclick="openModal(event)">Schedule Interview</button>
+    <button class="btn" id="updateStatusBtn" onclick="openStatusModal(event)">Update Candidate Status</button>
+    <!-- New Button -->
+    <button class="btn" id="downloadResume" onclick="downloadResume('{{ application_data._id }}')">
+      Download Resume
+    </button>
+  </div>
+
+  <!-- Existing Modal for Scheduling Interview or Rejecting Application -->
+  <div id="myModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <form id="meetingForm" class="job-form">
+        <h2 id="modalTitle">Schedule Meeting</h2>
+
+        <label for="to">To:</label>
+        <input type="email" id="to" name="to" readonly><br><br>
+
+        <div id="scheduleFields">
+          <label for="date">Date:</label>
+          <input type="date" id="date" name="date" required><br><br>
+
+          <label for="time">Time:</label>
+          <input type="time" id="time" name="time" required><br><br>
+        </div>
+
+        <div id="rejectFields" style="display: none;">
+          <label for="reason">Reason:</label>
+          <select id="reason" required>
+            <option value="">Select Reason</option>
+            <option value="Profile does not match">Profile does not match</option>
+            <option value="Experience not sufficient">Experience not sufficient</option>
+            <option value="Position filled">Position filled</option>
+          </select><br><br>
+        </div>
+
+        <button type="submit" class="btn" id="modalActionButton">Send Invite</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- New Modal for Updating Candidate Status -->
+  <div id="statusModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <form id="statusForm" class="job-form">
+        <h2>Update Candidate Status</h2>
+
+        <label for="emailStatus">Email:</label>
+        <input type="email" id="emailStatus" name="emailStatus" readonly><br><br>
+
+        <label for="status">Status:</label>
+        <select id="status" required>
+          <option value="">Select Status</option>
+          <option value="Applied">Applied</option>
+          <option value="Reviewed">Reviewed</option>
+          <option value="Interviewed">Interviewed</option>
+          <option value="Shortlisted">Shortlisted</option>
+          <option value="Selected">Selected</option>
+
+        </select><br><br>
+
+        <button type="submit" class="btn" id="modalActionButton">Update</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    validateToken();
+
+    function openStatusModal(event) {
+      const modal = document.getElementById("statusModal");
+      const emailInput = document.getElementById("emailStatus");
+      const statusSelect = document.getElementById("status");
+      const updateBtn = document.getElementById("updateStatusBtn");
+
+      // Pre-fill the email
+      emailInput.value = '{{ application_data.email }}';
+
+      // Reset the status dropdown
+      statusSelect.value = '';
+
+      // Set the action for the update button
+      updateBtn.onclick = function () { updateCandidateStatus(event); };
+
+      // Show the modal
+      modal.style.display = "block";
+    }
+
+    async function updateCandidateStatus(event) {
+      const email = document.getElementById("emailStatus").value;
+      const status = document.getElementById("status").value;
+
+      if (!status) {
+        alert("Please select a status.");
+        return;
+      }
+
+      const data = {
+        email: email,
+        status: status
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/updateCandidateStatus", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert(result.message);
+          document.getElementById("statusModal").style.display = "none";
+        } else {
+          alert("Failed to update status.");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong! Please try again.");
+      }
+    }
+
+    function closeStatusModal() {
+      document.getElementById("statusModal").style.display = "none";
+    }
+
+    document.getElementsByClassName("close")[1].onclick = function () {
+      document.getElementById("statusModal").style.display = "none";
+    };
+
+    window.onclick = function (event) {
+      if (event.target == document.getElementById("statusModal")) {
+        document.getElementById("statusModal").style.display = "none";
+      }
+    };
+
+    function validateToken() {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        alert("Unauthorized access. Please log in.");
+        window.location.href = "/login";
+      }
+    }
+
+    function downloadResume(applicationId) {
+      window.location.href = `http://127.0.0.1:8000/downloadResume/${applicationId}`;
+    }
+
+    function openModal(event) {
+      const buttonId = event.target.id; // Get clicked button ID
+      const modal = document.getElementById("myModal");
+      const modalTitle = document.getElementById("modalTitle");
+      const scheduleFields = document.getElementById("scheduleFields");
+      const rejectFields = document.getElementById("rejectFields");
+      const actionButton = document.getElementById("modalActionButton");
+
+      // Set email value (Assuming you're getting it dynamically)
+      document.getElementById('to').value = '{{ application_data.email }}';
+
+      if (buttonId === "scheduleInterviewBtn") {
+        modalTitle.innerText = "Schedule Interview";
+        scheduleFields.style.display = "block";
+        rejectFields.style.display = "none";
+        actionButton.innerText = "Send Invite";
+        actionButton.onclick = function () { scheduleInterview(buttonId); };
+      } else if (buttonId === "rejectApplicationBtn") {
+        modalTitle.innerText = "Reject Application";
+        scheduleFields.style.display = "none";
+        rejectFields.style.display = "block";
+        actionButton.innerText = "Send";
+        actionButton.onclick = function () { rejectApplication(buttonId); };
+      }
+
+      // Show Modal
+      modal.style.display = "block";
+
+      // Call function to set min date and time
+      setMinDateTime();
+    }
+
+    function setMinDateTime() {
+      const dateInput = document.getElementById("date");
+      const timeInput = document.getElementById("time");
+
+      const today = new Date().toISOString().split("T")[0];
+      dateInput.setAttribute("min", today);
+
+      dateInput.addEventListener("change", function () {
+        const selectedDate = new Date(dateInput.value);
+        const now = new Date();
+
+        if (selectedDate.toDateString() === now.toDateString()) {
+          const currentTime = now.toTimeString().slice(0, 5);
+          timeInput.setAttribute("min", currentTime);
+        } else {
+          timeInput.removeAttribute("min");
+        }
+      });
+    }
+
+    async function scheduleInterview(buttonId) {
+      const mail = document.getElementById("to").value;
+      const date = document.getElementById("date").value;
+      const time = document.getElementById("time").value;
+
+      if (!validateDateTime(date, time)) return;
+
+      const object = {
+        action: buttonId,
+        to: mail,
+        date: date,
+        time: time
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/scheduleInterview", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(object)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert(result.message);
+          document.getElementById("myModal").style.display = "none";
+        } else {
+          alert("Failed to send request");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong! Please try again.");
+      }
+    }
+
+    async function rejectApplication(buttonId) {
+      const mail = document.getElementById("to").value;
+      const reason = document.getElementById("reason").value;
+
+      const object = {
+        action: buttonId,
+        to: mail,
+        reason: reason
+      };
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/scheduleInterview", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(object)
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          alert(result.message);
+          document.getElementById("myModal").style.display = "none";
+        } else {
+          alert("Failed to send request");
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Something went wrong! Please try again.");
+      }
+    }
+    function validateDateTime(date, time) {
+      const selectedDateTime = new Date(`${date}T${time}`);
+      const now = new Date();
+
+      if (selectedDateTime < now) {
+        alert("Please select a valid future date and time.");
+        return false;
+      }
+      return true;
+    }
+    // Close modal
+    document.getElementsByClassName("close")[0].onclick = function () {
+      document.getElementById("myModal").style.display = "none";
+    };
+    window.onclick = function (event) {
+      if (event.target == document.getElementById("myModal")) {
+        document.getElementById("myModal").style.display = "none";
+      }
+    };
+    function validateToken() {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        alert("Unauthorized access. Please log in.");
+        window.location.href = "/login";
+      }
+    }
+    // Handle Cancel button click
+    function handleCancel() {
+      // Redirect to view applications page
+      window.location.href = "/viewApplications";
+    }
+
+    // Handle Delete button click
+    async function confirmDelete(applicationId) {
+      // Confirm before deleting
+      if (!confirm("Are you sure you want to delete this application? This action cannot be undone.")) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/deleteApplication/${applicationId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("access_token")}`
+          }
+        });
+
+        if (response.ok) {
+          alert("Application deleted successfully");
+          window.location.href = "/viewApplications";
+        } else {
+          const error = await response.json();
+          alert(`Failed to delete application: ${error.detail || "Unknown error"}`);
+        }
+      } catch (error) {
+        console.error("Delete error:", error);
+        alert("Failed to delete application. Please try again.");
+      }
+    }
+  </script>
+</body>
+
+</html>

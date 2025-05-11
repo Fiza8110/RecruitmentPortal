@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Details</title>
+  <link rel="stylesheet" href="../static/Css/Dashboard.css">
+  <style>
+    /* Card styling */
+    .card {
+      position: relative;
+      max-width: 100%;
+      margin: 2rem auto;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background: #fff;
+    }
+    .field {
+      margin-bottom: 1rem;
+    }
+    .field label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+      font-size: 15px;
+    
+    }
+    .field .value {
+      padding: 0.5rem;
+      background: #f7f7f7;
+      border-radius: 4px;
+    }
+    /* Close button */
+    .btn-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body style="background-color: lavender;">
+  <div class="card">
+    <button id="close-btn" class="btn-close">Close</button>
+    <h1>Job Details</h1>
+    <div class="field">
+      <label>Job Title:</label>
+      <div class="value">{{ job.Job_Title }}</div>
+    </div>
+    <div class="field">
+      <label>Description:</label>
+      <div class="value">{{ job.Job_Description }}</div>
+    </div>
+    <div class="field">
+      <label>Skills:</label>
+      <div class="value">{{ job.Skills }}</div>
+    </div>
+    <div class="field">
+      <label>Location:</label>
+      <div class="value">{{ job.Location }}</div>
+    </div>
+    <div class="field">
+      <label>Experience Required:</label>
+      <div class="value">{{ job.Experience }}</div>
+    </div>  
+  </div>
+  <script>
+    document.getElementById('close-btn').addEventListener('click', () => {
+      history.back();
+    });
+  </script>
+</body>
+</html>
