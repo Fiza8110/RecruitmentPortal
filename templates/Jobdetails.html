@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,24 +14,28 @@
       margin: 2rem auto;
       padding: 1.5rem;
       border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
       background: #fff;
     }
+
     .field {
       margin-bottom: 1rem;
     }
+
     .field label {
       display: block;
       font-weight: bold;
       margin-bottom: 0.25rem;
       font-size: 15px;
-    
+
     }
+
     .field .value {
       padding: 0.5rem;
       background: #f7f7f7;
       border-radius: 4px;
     }
+
     /* Close button */
     .btn-close {
       position: absolute;
@@ -45,6 +50,7 @@
     }
   </style>
 </head>
+
 <body style="background-color: lavender;">
   <div class="card">
     <button id="close-btn" class="btn-close">Close</button>
@@ -68,7 +74,7 @@
     <div class="field">
       <label>Experience Required:</label>
       <div class="value">{{ job.Experience }}</div>
-    </div>  
+    </div>
   </div>
   <script>
     document.getElementById('close-btn').addEventListener('click', () => {
@@ -76,4 +82,5 @@
     });
   </script>
 </body>
+
 </html>

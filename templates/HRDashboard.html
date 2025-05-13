@@ -14,9 +14,10 @@
         <div class="dashboard-container">
             <h1 class="dashboard-header">HR Dashboard</h1>
             <div class="button-group">
-                <button class="dashboard-btn" onclick="window.location.href='/viewApplications'">View Applications</button>
+                <button class="dashboard-btn" onclick="window.location.href='/viewApplications'">View
+                    Applications</button>
                 <button class="dashboard-btn" onclick="window.location.href='/postnewjob'">Post New Job</button>
-               
+
             </div>
         </div>
     </main>
@@ -24,14 +25,14 @@
     <!-- <script src="../static/JavaScript/HRcards.js"></script> -->
     <script>
         validateToken()
-async function validateToken() {
-  const token = localStorage.getItem("access_token");
-  if (!token) {
-    alert("Unauthorized access. Please log in.");
-    window.location.href = "/login";
+        async function validateToken() {
+            const token = localStorage.getItem("access_token");
+            if (!token) {
+                alert("Unauthorized access. Please log in.");
+                window.location.href = "/login";
 
-  }
-}
+            }
+        }
     </script>
 </body>
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,19 +42,19 @@
 
   <main id="card-container">
     {% for job in jobs_list %}
-      <div class="card">
-        <h2>{{ job.Job_Title }}</h2>
-        <p>{{ job.Job_Description }}</p>
-        <p><strong>Skills:</strong> {{ job.Skills }}</p>
-        <p><strong>Location:</strong> {{ job.Location }}</p>
+    <div class="card">
+      <h2>{{ job.Job_Title }}</h2>
+      <p>{{ job.Job_Description }}</p>
+      <p><strong>Skills:</strong> {{ job.Skills }}</p>
+      <p><strong>Location:</strong> {{ job.Location }}</p>
 
-        <div class="action-buttons">
-          <button class="view-job-btn" data-id="{{ job._id }}">👁️ View Job
-          </button>
-      <button class="edit-job-btn" data-id="{{ job._id }}" style="background-color: blueviolet;">📝</button>
-          <button class="delete-job-btn" data-id="{{ job._id }}" style="background-color: red;">🗑️ </button>
-        </div>
+      <div class="action-buttons">
+        <button class="view-job-btn" data-id="{{ job._id }}">👁️ View Job
+        </button>
+        <button class="edit-job-btn" data-id="{{ job._id }}" style="background-color: blueviolet;">📝</button>
+        <button class="delete-job-btn" data-id="{{ job._id }}" style="background-color: red;">🗑️ </button>
       </div>
+    </div>
     {% endfor %}
   </main>
 
@@ -128,4 +129,5 @@
   </script>
 
 </body>
+
 </html>

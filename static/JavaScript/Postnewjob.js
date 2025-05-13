@@ -3,12 +3,13 @@
 validateToken()
 async function postJob(event) {
 event.preventDefault();
+//Retrieves the values entered by the user in the form fields using their id.
     const jobTitle = document.getElementById('Job_Title').value;
     const jobDescription = document.getElementById('Job_Description').value;
     const experience = document.getElementById('Experience').value;
     const skills = document.getElementById('Skills').value;
     const location = document.getElementById('Location').value;
-
+    //Create a data object
     var object ={
         "Job_Title":jobTitle,
         "Job_Description":jobDescription,
@@ -19,9 +20,10 @@ event.preventDefault();
     }
 
     try {
+        // Send data to the backend
         const response = await fetch("http://127.0.0.1:8000/postnewjob", {
             method: "POST",
-            headers: {
+            headers: {//Headers indicate that the request body is in JSON format.
                 "Content-Type": "application/json",  // Set header for JSON
             },
             body: JSON.stringify(object),  // Convert object to JSON string

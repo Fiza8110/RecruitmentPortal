@@ -92,7 +92,7 @@ async def forgot_password(request: Request, email: str = Form(...)):
     
     This link will expire in {RESET_TOKEN_EXPIRE_HOURS} hours.
     
-    If you didn't request a password reset, please ignore this email.
+    If you didn't request a password reset, please ignore this email already.
     """
     
     send_email(email, "Password Reset Request", email_content)

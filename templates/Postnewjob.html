@@ -12,9 +12,7 @@
 <body style="background-color: lavender;">
     <main>
         {% include 'Navbar.html' %}
-        <div class="job-container", style="background-color: white; width: 50%;" 
-        
-        >
+        <div class="job-container" , style="background-color: white; width: 50%;">
             <h2 style="text-align: center;">Post New Job</h2>
             <form class="job-form" onsubmit="postJob(event)">
                 <div class="form-group">
@@ -23,26 +21,29 @@
                 </div>
                 <div class="form-group">
                     <label for="jobDescription">Job Description <span style="color: red;">*</span></label>
-                    <textarea id="Job_Description" name="jobDescription" placeholder="Describe the job" rows="4" required></textarea>
+                    <textarea id="Job_Description" name="jobDescription" placeholder="Describe the job" rows="4"
+                        required></textarea>
                 </div>
                 <div class="form-group">
                     <label for="yearsOfExperience">Years of Experience <span style="color: red;">*</span></label>
-                    <input type="number" id="Experience" name="yearsOfExperience" placeholder="Enter years of experience" min="0" required>
+                    <input type="number" id="Experience" name="yearsOfExperience"
+                        placeholder="Enter years of experience" min="0" required>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="skills">Skills <span style="color: red;">*</span></label>
-                    <input list="skillsOptions" id="Skills" name="skills" placeholder="Type or choose skills (comma-separated)" required>
+                    <input list="skillsOptions" id="Skills" name="skills"
+                        placeholder="Type or choose skills (comma-separated)" required>
                     <datalist id="skillsOptions">
-                      <option value="JavaScript">
-                      <option value="HTML">
-                      <option value="CSS">
-                      <option value="React">
-                      <option value="Node.js">
+                        <option value="JavaScript">
+                        <option value="HTML">
+                        <option value="CSS">
+                        <option value="React">
+                        <option value="Node.js">
                     </datalist>
                     <small>Separate multiple skills with commas (e.g., HTML, CSS, MySQL)</small>
-                  </div>
-                  
+                </div>
+
                 <div class="form-group">
                     <label for="location">Location <span style="color: red;">*</span></label>
                     <select id="Location" name="location" required>

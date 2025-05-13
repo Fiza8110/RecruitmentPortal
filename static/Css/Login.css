@@ -10,7 +10,6 @@ body {
     background-position: center; /* Center the image */
     background-repeat: no-repeat; /* Prevent the image from repeating */
   }
-  
   .login-container {
     background-color: rgba(255, 255, 255, 0.9); /* White background with transparency */
     padding: 2rem;
@@ -115,4 +114,4 @@ body {
       padding: 0.5rem;
     }
   }
-  
+  /* Example CSS for Custom Alert Box */
