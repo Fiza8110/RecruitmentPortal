@@ -3,7 +3,7 @@ body {
   background-color: #f4f4f9;
   margin: 0;
   padding: 20px;
-  background-image: url('assets/VA.png');
+  /* background-image: url('assets/.png'); */
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
