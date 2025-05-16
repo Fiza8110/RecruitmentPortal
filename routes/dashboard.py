@@ -9,6 +9,7 @@ from bson import ObjectId
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 import os
+from datetime import datetime
 import json
 from pydantic import BaseModel, EmailStr, Field
 from pathlib import Path
@@ -29,10 +30,23 @@ templates = Jinja2Templates(directory='templates') # Jinja2Templates: Tells Fast
 route.mount("/static", StaticFiles(directory = "static"), name = "static") # mount("/static", ...): Serves static files (CSS/JS/images) from /static.
 
 #route to render dashboard html page
-@route.get("/dashboard") # This defines an HTTP GET endpoint at the URL path /dashboard
-def dashboard(request: Request):#Route handler function 
-    jobs_list = list(JObs_COL.find({}))#Fetches all jobs from the MongoDB collection
-    return templates.TemplateResponse("Dashboard.html", {"request": request, "jobs_list": jobs_list})#Renders the Dashboard.html page with the list of jobs
+@route.get("/dashboard")
+async def dashboard(request: Request):
+    user_email = request.session.get("user_email")
+    print(user_email)
+
+    jobs_list = list(JObs_COL.find({}))
+    applied_jobs = list(APPLICATION_COL.find({"email": user_email}))
+   
+    applied_job_titles = {job["job_title"] for job in applied_jobs}
+    print(jobs_list)
+    print(applied_jobs)
+    print(applied_job_titles)
+    return templates.TemplateResponse("Dashboard.html", {
+        "request": request,
+        "jobs_list": jobs_list,
+        "applied_job_titles": applied_job_titles
+    })
 
 # route to render HR dashboard html page
 @route.get("/hrDashboard")
@@ -72,7 +86,7 @@ class JobApplication(BaseModel):
 
 @route.post("/applyJob")
 async def apply_job(
-    job_title: str = Form(...),#Indicates this value comes from a form field.
+    job_title: str = Form(...),
     first_name: str = Form(...),
     last_name: str = Form(...),
     email: EmailStr = Form(...),
@@ -84,19 +98,15 @@ async def apply_job(
     current_ctc: str = Form(None),
     expected_ctc: str = Form(None),
     notice_period: str = Form(None),
-    resume: UploadFile = File(...),#Used to upload files
-    # path:'src/upload'
+    resume: UploadFile = File(...),
 ):
     try:
-        # 🔹 Save the resume file
-        #  Saves the uploaded resume file in binary mode to the uploads folder.
+        # 1. save resume
         resume_path = os.path.join(UPLOAD_DIR, resume.filename)
-        print("✅ Received resume file:", resume.filename)
         with open(resume_path, "wb") as f:
             f.write(await resume.read())
 
-        # 🔹 Prepare application data 
-       #Create a Dictionary for the Applicant's Data
+        # 2. build application record
         application_data = {
             "job_title": job_title,
             "first_name": first_name,
@@ -106,31 +116,36 @@ async def apply_job(
             "current_employee": current_employee,
             "company_name": company_name,
             "company_location": company_location,
-            "experience":experience,
+            "experience": experience,
             "current_ctc": current_ctc,
             "expected_ctc": expected_ctc,
             "notice_period": notice_period,
-            "resume": resume_path,  # Save file path, not binary
+            "resume_path": resume_path,
+
+            # ← NEW: server-side fields
+            "status": "Applied",
+            "applied_on": datetime.utcnow().isoformat(),
         }
-        #Checks if the email is already in the database.
-        testemail = APPLICATION_COL.find_one({"email":email})
-        if testemail:
+
+        # 3. duplicate-email check
+        if APPLICATION_COL.find_one({"email": email}):
             raise HTTPException(status_code=400, detail="Email already exists.")
-        
-        # 🔹 Insert into MongoDB
-        inserted_data = APPLICATION_COL.insert_one(application_data)
-        print("Inserted data", inserted_data)
-        application_data["_id"] = str(inserted_data.inserted_id)
-        #Returns a JSON response with a success message and all submitted data.
+
+        # 4. insert into MongoDB
+        result = APPLICATION_COL.insert_one(application_data)
+        application_data["_id"] = str(result.inserted_id)
+
         return JSONResponse(
+            status_code=200,
             content={"message": "Application submitted successfully", "data": application_data}
         )
-    
-    #Catches any unexpected errors
-    except Exception as e:
-        print("❌ Internal Server Error:", str(e))
-        raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
+    except HTTPException:
+        raise
+    except Exception as e:
+        # full traceback in logs for debugging
+        import traceback; traceback.print_exc()
+        raise HTTPException(status_code=500, detail="Internal server error")
 # Helper function to convert ObjectId to string
 def serialize_objectid(obj):
     if isinstance(obj, ObjectId):# convert it to a string using str(obj).
@@ -161,25 +176,44 @@ def view_applications(request: Request):#This function handles the request.
     })
 
 # Function to convert ObjectId to string
-def serialize_objectid(obj):
-    """ Helper function to convert ObjectId to string for JSON serialization """
-    if isinstance(obj, ObjectId):
-        return str(obj)
-    elif isinstance(obj, list):
-        return [serialize_objectid(item) for item in obj]
-    elif isinstance(obj, dict):
-        return {key: serialize_objectid(value) for key, value in obj.items()}
-    return obj
-
+# def serialize_objectid(obj):
+#     """ Helper function to convert ObjectId to string for JSON serialization """
+#     if isinstance(obj, ObjectId):
+#         return str(obj)
+#     elif isinstance(obj, list):
+#         return [serialize_objectid(item) for item in obj]
+#     elif isinstance(obj, dict):
+#         return {key: serialize_objectid(value) for key, value in obj.items()}
+#     return obj
+@route.get("/candidateApplications")
+def hrDashboard(request: Request):
+    user_email = request.session.get("user_email")
+    applications = list(APPLICATION_COL.find({"email": user_email}))
+    return templates.TemplateResponse("CandidateStatus.html", {"request": request,"applications": applications})
 # route to view details of a specific application
-@route.get("/viewDetails/{application_id}", response_class=HTMLResponse)#response_class=HTMLResponse tells FastAPI to return an HTML page instead of JSON.
-async def view_details(request: Request, application_id: str):#Converts the application_id string into a proper ObjectId
-    # Fetch the application details from the database using the application_id
-    application_data = APPLICATION_COL.find_one({"_id": ObjectId(application_id)})
-    
-    if application_data:#Converts the application_id string into a proper ObjectId
-        application_data = serialize_objectid(application_data)  # Convert ObjectId to string
-        return templates.TemplateResponse("ViewApplication.html", {"request": request, "application_data": application_data})
+@route.get("/viewDetails/{application_id}", response_class=HTMLResponse)
+async def view_details(request: Request, application_id: str):
+    obj_id = ObjectId(application_id)
+
+    # Fetch the application details first
+    application_data = APPLICATION_COL.find_one({"_id": obj_id})
+
+    if application_data:
+        # Only update status if it's empty or not set
+        if not application_data.get("status"):
+            APPLICATION_COL.update_one(
+                {"_id": obj_id},
+                {"$set": {"status": "in-progress"}}
+            )
+            # Fetch the updated document again
+            application_data = APPLICATION_COL.find_one({"_id": obj_id})
+
+        application_data = serialize_objectid(application_data)  # Convert ObjectId
+        return templates.TemplateResponse("ViewApplication.html", {
+            "request": request,
+            "application_data": application_data
+        })
+
     else:
         return {"message": "Application not found!"}
 
@@ -238,7 +272,9 @@ async def delete_job(job_id: str):
         return JSONResponse(content={"message": "Job deleted successfully"}, status_code=200)
     else:
         raise HTTPException(status_code=404, detail="Job not found")
-
+@route.get("/.well-known/appspecific/com.chrome.devtools.json")
+async def devtools_stub():
+    return JSONResponse(content={"status": "not implemented"}, status_code=200)
 # to post new job application post action
 @route.post("/postnewjob")
 async def hrDashboard(request: Request, data: dict):#Defines an asynchronous function to handle the request.

@@ -1,17 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Application Form</title>
     <link rel="stylesheet" href="../static/Css/JobApply.css">
 </head>
-
 <body style="background-color: lavender;">
     <!-- <header> -->
-    <!-- <h1>Job Application Form</h1> -->
-    {% include 'Navbar.html' %}
+        <!-- <h1>Job Application Form</h1> -->
+        {% include 'Navbar.html' %}
     <!-- </header> -->
     <main>
         <form action="/applyJob" method="post" enctype="multipart/form-data">
@@ -30,7 +28,7 @@
             </div>
             <div class="form-group">
                 <label for="email">Email <span style="color: red;">*</span></label>
-                <input type="email" id="email" name="email" required>
+                <input type="email" id="email" name="email" disabled readonly>
             </div>
             <div class="form-group">
                 <label for="mobile">Mobile No <span style="color: red;">*</span></label>
@@ -42,12 +40,10 @@
             </div>
 
             <div class="form-group">
-                <label>Currently Employed? <span style="color: red;">*</span></label>
+                <label>Experienced? <span style="color: red;">*</span></label>
                 <div id="currentEmployee">
-                    <label><input type="radio" name="employed" value="yes" required
-                            onclick="toggleEmploymentFields(true)"> Yes</label>
-                    <label><input type="radio" name="employed" value="no" required
-                            onclick="toggleEmploymentFields(false)"> No</label>
+                    <label><input type="radio" name="employed" value="yes" required onclick="toggleEmploymentFields(true)"> Yes</label>
+                    <label><input type="radio" name="employed" value="no" required onclick="toggleEmploymentFields(false)"> No</label>
                 </div>
             </div>
 
@@ -82,95 +78,102 @@
             <button type="button" id="cancelButton" onclick="window.location.href='/dashboard'">Cancel</button>
         </form>
     </main>
-
+    
     <!-- <script src="../static/JavaScript/JobApply.js"></script> -->
     <script>
         validateToken()
-        const selectedJobTitle = localStorage.getItem("selectedJobTitle");
-        if (selectedJobTitle) {
-            document.getElementById("jobTitle").value = selectedJobTitle;
-        }
+const selectedJobTitle = localStorage.getItem("selectedJobTitle");
+if (selectedJobTitle) {
+    document.getElementById("jobTitle").value = selectedJobTitle;
+}
+const selectedEmail = localStorage.getItem("email");
+if (selectedEmail) {
+    document.getElementById("email").value = selectedEmail;
+}
 
         function toggleEmploymentFields(isEmployed) {
             document.getElementById("employmentDetails").style.display = isEmployed ? "block" : "none";
         }
 
         async function ApplyJob(event) {
-            event.preventDefault(); // Prevent page reload
+  event.preventDefault(); // Prevent page reload
 
-            const formData = new FormData(); // Use FormData for file uploads
+  const formData = new FormData(); // Use FormData for file uploads
 
-            formData.append("job_title", document.getElementById("jobTitle").value);
-            formData.append("first_name", document.getElementById("firstName").value);
-            formData.append("last_name", document.getElementById("lastName").value);
-            formData.append("email", document.getElementById("email").value);
-            formData.append("mobile", document.getElementById("mobile").value);
-            formData.append("current_employee", document.querySelector('input[name="employed"]:checked').value);
-
-            // Ensure resume is selected and appended
-            const resumeFile = document.getElementById("resume").files[0];
-            if (resumeFile) {
-                formData.append("resume", resumeFile);
-            } else {
-                alert("No resume selected");
-            }
-
-            // If user is employed, send additional details
-            if (document.querySelector('input[name="employed"]:checked').value === "yes") {
-                formData.append("company_name", document.getElementById("companyName").value);
-                formData.append("company_location", document.getElementById("companyLocation").value);
-                formData.append("current_ctc", document.getElementById("currentCTC").value);
-                formData.append("expected_ctc", document.getElementById("expectedCTC").value);
-                formData.append("experience", document.getElementById("experience").value);
-                formData.append("notice_period", document.getElementById("noticePeriod").value);
-            }
-
-            // Log FormData content manually
-            let formDataObject = {};
-            formData.forEach((value, key) => {
-                if (value instanceof File) {
-                    formDataObject[key] = value.name; // Show only the file name, or metadata if needed
-                } else {
-                    formDataObject[key] = value;
-                }
-            });
-            alert("Form Data:", formData); // Debugging, replace with actual form submission logic
+  formData.append("job_title", document.getElementById("jobTitle").value);
+  formData.append("first_name", document.getElementById("firstName").value);
+  formData.append("last_name", document.getElementById("lastName").value);
+  formData.append("email", document.getElementById("email").value);
+  formData.append("mobile", document.getElementById("mobile").value);
+  formData.append("current_employee", document.querySelector('input[name="employed"]:checked').value);
+  formData.append("applied_on", new Date().toISOString());
+  formData.append("status", "");
+  formData.append("applied_on", new Date().toISOString());
 
 
-            try {
-                const response = await fetch("http://127.0.0.1:8000/applyJob", {
-                    method: "POST",
-                    body: formData,
-                });
+  // Ensure resume is selected and appended
+  const resumeFile = document.getElementById("resume").files[0];
+  if (resumeFile) {
+      formData.append("resume", resumeFile);
+  } else {
+      alert("No resume selected");
+  }
 
-                const data = await response.json();
-                if (response.ok) {
-                    console.log("Success:", data);
-                    alert("Application Submitted Successfully!");
-                    window.location.href = "/dashboard"
-                } else {
-                    console.log("Form Data:", formDataObject);
+  // If user is employed, send additional details
+  if (document.querySelector('input[name="employed"]:checked').value === "yes") {
+      formData.append("company_name", document.getElementById("companyName").value);
+      formData.append("company_location", document.getElementById("companyLocation").value);
+      formData.append("current_ctc", document.getElementById("currentCTC").value);
+      formData.append("expected_ctc", document.getElementById("expectedCTC").value);
+      formData.append("experience", document.getElementById("experience").value);
+      formData.append("notice_period", document.getElementById("noticePeriod").value);
+  }
 
-                }
+  // Log FormData content manually
+  let formDataObject = {};
+  formData.forEach((value, key) => {
+      if (value instanceof File) {
+          formDataObject[key] = value.name; // Show only the file name, or metadata if needed
+      } else {
+          formDataObject[key] = value;
+      }
+  });
+  alert("Form Data:", formData); // Debugging, replace with actual form submission logic
 
 
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Failed to Submit Application");
-            }
-        }
+  try {
+      const response = await fetch("http://127.0.0.1:8000/applyJob", {
+          method: "POST",
+          body: formData,
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Success:", data);
+        alert("Application Submitted Successfully!");
+        window.location.href ="/dashboard"
+    } else {
+        console.log("Form Data:", formDataObject);
+
+    }
+      
+   
+  } catch (error) {
+      console.error("Error:", error);
+      alert("Failed to Submit Application");
+  }
+}
 
 
-        async function validateToken() {
-            const token = localStorage.getItem("access_token");
-            if (!token) {
-                alert("Unauthorized access. Please log in.");
-                window.location.href = "/login";
+async function validateToken() {
+  const token = localStorage.getItem("access_token");
+  if (!token) {
+    alert("Unauthorized access. Please log in.");
+    window.location.href = "/login";
 
-            }
-        }
-
+  }
+}
+  
     </script>
 </body>
-
 </html>

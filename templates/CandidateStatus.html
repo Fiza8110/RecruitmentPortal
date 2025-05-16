@@ -2,96 +2,160 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <title>Candidate Status</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 30px;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title >My Job Applications</title>
+ <style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f2f4f8;
+    margin: 0;
+    padding: 0;
+  }
+
+  h1 {
+    color: #222;
+    text-align: center;
+    margin-top: 60px;
+    font-size: 2rem;
+  }
+
+  table {
+    width: 90%;
+    max-width: 1000px;
+    margin: 40px auto;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  th, td {
+    padding: 18px 22px;
+    text-align: left;
+    font-size: 15px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  th {
+    background-color: #007bff;
+    color: white;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.6px;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  td:last-child {
+    text-align: center;
+  }
+
+  .status {
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 30px;
+    display: inline-block;
+    font-size: 14px;
+    text-transform: capitalize;
+    white-space: nowrap;
+  }
+
+  .in-progress {
+    background-color: #ffc107;
+    color: #212529;
+  }
+
+  .interview {
+    background-color: #17a2b8;
+    color: white;
+  }
+
+  .rejected {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .accepted {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .pending {
+    background-color: #6c757d;
+    color: white;
+  }
+
+  @media (max-width: 768px) {
+    table, thead, tbody, th, td, tr {
+      display: block;
     }
 
-    .candidate-info {
-      margin-bottom: 20px;
-      padding: 10px;
-      border-bottom: 1px solid #ccc;
+    thead {
+      display: none;
     }
 
-    .candidate-info div {
-      margin: 5px 0;
+    tr {
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
     }
 
-    .chart-container {
-      max-width: 700px;
-      margin-top: 40px;
+    td {
+      padding: 12px 20px;
+      text-align: right;
+      position: relative;
     }
-  </style>
+
+    td::before {
+      content: attr(data-label);
+      position: absolute;
+      left: 20px;
+      top: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: #555;
+    }
+
+    td:last-child {
+      text-align: right;
+    }
+  }
+</style>
+
 </head>
 
 <body>
+  {% include 'Navbar.html' %}
+  <h1 style="margin-top: 50px;">My Job Applications</h1>
 
-  <h2>Candidate Status Overview</h2>
-
-  {% for candidate in candidates %}
-  <div class="candidate-info">
-    <div><strong>Name:</strong> {{application_data.first_name }} {{ application_data.last_name }}</div>
-    <div><strong>Email:</strong> {{application_data.email}}</div>
-    <div><strong>Job Title:</strong> {{ application_data.job_title }}</div>
-    <div><strong>Status:</strong> {{ application_data.status }}</div>
-  </div>
-  {% endfor %}
-
-  <div class="chart-container">
-    <canvas id="statusChart"></canvas>
-  </div>
-
-  <script>
-    const candidates = JSON.parse('{{ candidates_json | safe }}');
-    console.log(candidates); // Test: see if it's loaded
-    const statusCounts = {
-      Applied: 0,
-      Reviewed: 0,
-      Interviewed: 0,
-      Shortlisted: 0,
-      Selected: 0
-    };
-
-    candidates.forEach(candidate => {
-      const status = candidate.status;
-      if (statusCounts.hasOwnProperty(status)) {
-        statusCounts[status]++;
-      }
-    });
-
-    const ctx = document.getElementById('statusChart').getContext('2d');
-    const statusChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: Object.keys(statusCounts),
-        datasets: [{
-          label: 'Number of Candidates',
-          data: Object.values(statusCounts),
-          backgroundColor: ['#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50']
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          title: {
-            display: true,
-            text: 'Candidate Status Distribution'
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            precision: 0
-          }
-        }
-      }
-    });
-  </script>
+  <table>
+    <thead>
+      <tr>
+        <th>Job Title</th>
+        <th>Date Applied</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for app in applications %}
+      <tr>
+        <td>{{ app.job_title }}</td>
+        <td>{{ app.applied_on_str }}</td>
+        <td>
+          <span class="status {{ app.status|lower|replace(' ', '-') | default('pending') }}">
+            {{ app.status | default("Pending") }}
+          </span>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
 </body>
 

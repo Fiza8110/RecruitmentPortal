@@ -15,8 +15,8 @@
   <div class="card">
     <div id="details-container">
       <div class="header-content">
-        <div class="action-icons">
-          <i class="fas fa-times action-icon icon-cancel" data-tooltip="Cancel" onclick="handleCancel()"></i>
+        <div class="action-icons"style="margin-left: 70%;">
+          <i class="fas fa-times action-icon icon-cancel" data-tooltip="Cancel" onclick="handleCancel()" ></i>
           <i class="fas fa-trash action-icon icon-delete" data-tooltip="Delete"
             onclick="confirmDelete('{{ application_data._id }}')"></i>
         </div>
@@ -30,15 +30,17 @@
       <div class="detail-row"><strong>Phone:</strong> <span>{{ application_data.mobile }}</span></div>
 
       {% if application_data.current_employee == "yes" %}
-      <div class="detail-row"><strong>Current Employee:</strong> <span>Yes</span></div>
+      
       <div class="detail-row"><strong>Company Name:</strong> <span>{{ application_data.company_name }}</span></div>
       <div class="detail-row"><strong>Company Location:</strong> <span>{{ application_data.company_location }}</span>
+        
       </div>
+      <div class="detail-row"><strong>Experience: </strong> <span>{{ application_data.experience}}</span></div>
       <div class="detail-row"><strong>Current CTC:</strong> <span>{{ application_data.current_ctc }}</span></div>
       <div class="detail-row"><strong>Expected CTC:</strong> <span>{{ application_data.expected_ctc }}</span></div>
       <div class="detail-row"><strong>Notice Period:</strong> <span>{{ application_data.notice_period }}</span></div>
       {% else %}
-      <div class="detail-row"><strong>Current Employee:</strong> <span>No</span></div>
+     
       <p>This candidate doesn't have any experience.</p>
       {% endif %}
     </div>

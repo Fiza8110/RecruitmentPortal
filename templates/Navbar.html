@@ -113,7 +113,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/candidatestatus">
+            <a class="nav-link" href="/candidateApplications">
               <i class="bi bi-person-check"></i> Show Candidate Status
             </a>
           </li>
@@ -177,14 +177,17 @@
         }, 50);
       }
     });
-
-    function logout() {
+      function logout() {
       localStorage.removeItem("access_token");
       localStorage.removeItem("username");
       localStorage.removeItem("email");
       localStorage.removeItem("role");
-      window.location.href = "/login";
+      localStorage.clear();
+      const win = window.open("/login");
+      window.close();
     }
+
+    
   </script>
 
 </body>

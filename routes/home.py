@@ -7,6 +7,7 @@ from fastapi import FastAPI, Form, Request
 from fastapi.responses import JSONResponse
 import random
 from datetime import datetime, timedelta
+from config.config import APPLICATION_COL
 from pydantic import BaseModel
 
 route = APIRouter()
@@ -82,6 +83,33 @@ def send_email(receiver_email, email_content):
         print(f"Email successfully sent to {receiver_email}")
     except Exception as e:
         print(f"Error sending email: {e}")
+def send_email1(receiver_email, email_content):
+    sender_email = "c31684901@gmail.com"
+    password = "ualbgpbeswgejwez"  
+    subject = "Reset The Password"
+
+    # Construct the email message
+    message = f"""
+    {email_content}
+
+    Best Regards,
+    XYZ Company
+    """
+
+    msg = MIMEText(message)
+    msg["Subject"] = subject
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+
+    # Send email using Gmail SMTP
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+            smtp.starttls()
+            smtp.login(sender_email, password)
+            smtp.send_message(msg)
+        print(f"Email successfully sent to {receiver_email}")
+    except Exception as e:
+        print(f"Error sending email: {e}")
 
 # @route.post("/scheduleInterview")  # Fix route decorator
 # async def forgot_password_post(request: Request, mail: str = Form(...)):
@@ -98,7 +126,7 @@ async def schedule_interview(request: ScheduleRequest):
     # Extract data from request
     action = request.action
     # mail = request.to
-    mail = "m.prakash9977@gmail.com"  # Test email address, replace with actual email address when ready
+    mail = "fizajfiza2k1@gmail.com"  # Test email address, replace with actual email address when ready
     date = request.date
     time = request.time
     reason = request.reason
@@ -112,6 +140,10 @@ async def schedule_interview(request: ScheduleRequest):
         send_email(mail, email_content)
     
     elif action == "rejectApplicationBtn":
+        # APPLICATION_COL.update_one(
+        #         {"email": mail},
+        #         {"$set": {"status": "Rejected"}}
+        #     )
         # Send rejection email
         email_content = f"Dear candidate, your application has been rejected due to the following reason: {reason}."
         send_email(mail, email_content)

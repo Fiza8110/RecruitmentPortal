@@ -46,8 +46,8 @@
       <h2>{{ job.Job_Title }}</h2>
       <p>{{ job.Job_Description }}</p>
       <p><strong>Skills:</strong> {{ job.Skills }}</p>
-      <p><strong>Location:</strong> {{ job.Location }}</p>
-
+      <!-- <p><strong>Location:</strong> {{ job.Location }}</p> -->
+       <p><strong>Experience:</strong> {{ job.Experience}}</p>
       <div class="action-buttons">
         <button class="view-job-btn" data-id="{{ job._id }}">👁️ View Job
         </button>
@@ -74,7 +74,8 @@
       document.querySelectorAll(".edit-job-btn").forEach((button) => {
         button.addEventListener("click", (e) => {
           const jobId = e.target.getAttribute("data-id");
-          window.location.href = `/editJob/${jobId}`;  // Redirect to edit form
+         window.location.href = `/editJob/${jobId}`;
+ // Redirect to edit form
         });
       });
 

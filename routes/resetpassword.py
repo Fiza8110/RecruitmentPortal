@@ -1,144 +1,44 @@
-from fastapi import APIRouter, Request, HTTPException, Depends, Form
+from fastapi import APIRouter, Request, Form
+from fastapi.responses import HTMLResponse, JSONResponse
+from  routes.create_token  import generate_reset_token, verify_reset_token, hash_password
+from config.config import REGISTER_COL
+from routes.home import send_email1
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import JSONResponse, RedirectResponse
-from itsdangerous import URLSafeTimedSerializer
-from passlib.context import CryptContext
-import smtplib
-from email.mime.text import MIMEText
-from datetime import datetime, timedelta
-from config import REGISTER_COL
-import pymongo
 
-route = APIRouter()
-
+# Defines a group of related routes for password reset.
+reset_router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
-# Password reset configuration
-SECRET_KEY = "your-secure-secret-key-change-in-production"  # Should be long and random
-SECURITY_PASSWORD_SALT = "your-password-salt-change-in-production"
-RESET_TOKEN_EXPIRE_HOURS = 24
+#Renders the form where users can enter their email to reset their password.
+@reset_router.get("/forgot-password", response_class=HTMLResponse)
+def forgot_password_form(request: Request):
+    return templates.TemplateResponse("ForgotPassword.html", {"request": request})
 
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+#It is triggered when a user submits their email to request a password reset.
+@reset_router.post("/forgot-password")
+def send_reset_link(request: Request, email: str = Form(...)):
+    user = REGISTER_COL.find_one({"email": email})#Checks if user exists in the DB.
 
-def generate_reset_token(email):
-    serializer = URLSafeTimedSerializer(SECRET_KEY)
-    return serializer.dumps(email, salt=SECURITY_PASSWORD_SALT)
-
-def verify_reset_token(token, expiration=RESET_TOKEN_EXPIRE_HOURS*3600):
-    serializer = URLSafeTimedSerializer(SECRET_KEY)
-    try:
-        email = serializer.loads(
-            token,
-            salt=SECURITY_PASSWORD_SALT,
-            max_age=expiration
-        )
-        return email
-    except Exception:
-        return None
-
-def get_password_hash(password):
-    return pwd_context.hash(password)
-
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
-
-def send_email(receiver_email, subject, email_content):
-    sender_email = "c31684901@gmail.com"
-    password = "ualbgpbeswgejwez"  
-
-    message = f"""
-    {email_content}
-
-    Best Regards,
-    XYZ Company
-    """
-
-    msg = MIMEText(message)
-    msg["Subject"] = subject
-    msg["From"] = sender_email
-    msg["To"] = receiver_email
-
-    try:
-        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
-            smtp.starttls()
-            smtp.login(sender_email, password)
-            smtp.send_message(msg)
-        print(f"Email successfully sent to {receiver_email}")
-    except Exception as e:
-        print(f"Error sending email: {e}")
-
-@route.get("/forgot-password")
-def forgot_password_page(request: Request):
-    return templates.TemplateResponse("forgot_password.html", {"request": request})
-
-@route.post("/forgot-password")
-async def forgot_password(request: Request, email: str = Form(...)):
-    # Check if email exists in database
-    user = REGISTER_COL.find_one({"email": email})
-    if not user:
-        return templates.TemplateResponse(
-            "forgot_password.html",
-            {"request": request, "message": "Email not found in our system"},
-            status_code=404
-        )
+    if not user:#If no user is found, it returns a 404 JSON error response.
+        return JSONResponse(status_code=404, content={"message": "User not found"})
     
-    token = generate_reset_token(email)
-    reset_url = f"http://localhost:8000/reset-password?token={token}"
-    
-    email_content = f"""
-    To reset your password, click on the following link:
-    {reset_url}
-    
-    This link will expire in {RESET_TOKEN_EXPIRE_HOURS} hours.
-    
-    If you didn't request a password reset, please ignore this email already.
-    """
-    
-    send_email(email, "Password Reset Request", email_content)
-    
-    return templates.TemplateResponse(
-        "forgot_password.html",
-        {"request": request, "message": "Password reset link sent to your email"}
-    )
+    token = generate_reset_token(email) #If user exists, generates a secure token tied to their email.
+    reset_link = f"http://localhost:8000/reset-password?token={token}"#Sends an email with a reset link
+    email_content = f"Click the link to reset your password: {reset_link}"#Responds with a success or error message.
+    send_email1(email, email_content)
+    return JSONResponse(status_code=200, content={"message": "Reset email sent"})
 
-@route.get("/reset-password")
-async def show_reset_password_form(request: Request, token: str):
-    email = verify_reset_token(token)
-    if not email:
-        raise HTTPException(status_code=400, detail="Invalid or expired token")
-    
-    return templates.TemplateResponse(
-        "reset_password.html",
-        {"request": request, "token": token}
-    )
+@reset_router.get("/reset-password", response_class=HTMLResponse)
+# Renders a form for entering a new password, using the provided token
+def reset_password_form(request: Request, token: str):
+    return templates.TemplateResponse("Forgotpasswordpage.html", {"request": request, "token": token})
 
-@route.post("/reset-password")
-async def reset_password(
-    request: Request,
-    token: str = Form(...),
-    new_password: str = Form(...),
-    confirm_password: str = Form(...)
-):
-    if new_password != confirm_password:
-        return templates.TemplateResponse(
-            "reset_password.html",
-            {"request": request, "token": token, "error": "Passwords don't match"},
-            status_code=400
-        )
+@reset_router.post("/reset-password")
+def reset_password(request: Request, token: str = Form(...), new_password: str = Form(...)):
+    email = verify_reset_token(token)#Verifies the token and retrieves the associated email.
+    if not email:#If no email is found, it returns a 404 JSON error response.
+        return JSONResponse(status_code=400, content={"message": "Invalid or expired token"})
     
-    email = verify_reset_token(token)
-    if not email:
-        raise HTTPException(status_code=400, detail="Invalid or expired token")
-    
-    # Update password in database
-    hashed_password = get_password_hash(new_password)
-    result = REGISTER_COL.update_one(
-        {"email": email},
-        {"$set": {"password": hashed_password}}
-    )
-    
-    if result.modified_count == 1:
-        return RedirectResponse(url="/login", status_code=303)
-    else:
-        raise HTTPException(status_code=500, detail="Failed to update password")
+    hashed_pwd = hash_password(new_password)#If token is valid, hashes the new password.
+    result = REGISTER_COL.update_one({"email": email}, {"$set": {"password": hashed_pwd}})#Updates the user's password in the database.
+    return JSONResponse(status_code=200, content={"message": "Password reset successfully"})#Sends a success response.

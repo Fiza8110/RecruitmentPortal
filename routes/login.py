@@ -25,7 +25,9 @@ async def login(request: Request, form_data: OAuth2PasswordRequestForm = Depends
         # Authenticate user from database
         user = authenticate_user(email=form_data.username, password=form_data.password)
         access_token = create_access_token(user_data={"sub": user["email"]})
-
+        # Store in session
+        request.session["user_email"] = user["email"]
+        request.session["username"] = user["username"]
 
         return JSONResponse(
             content={
