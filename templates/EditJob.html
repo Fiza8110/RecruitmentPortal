@@ -131,7 +131,7 @@
         body: JSON.stringify(data)
       });
 
-      const result = await response.json();
+      const result = await response.json();//Waits for the JSON response from the server.
       if (response.ok) {
         alert("Job updated successfully!");
         window.location.href = `/jobDetails/${data.job_id}`;

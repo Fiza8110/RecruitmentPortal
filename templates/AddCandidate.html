@@ -27,6 +27,7 @@
       font-size: 14px;
       border-radius: 6px;
     }
+
     .dropdown label {
       display: block;
       margin-bottom: 6px;
@@ -35,6 +36,7 @@
     }
   </style>
 </head>
+
 <body style="background-color: lavender;">
   {% include 'Navbar.html' %}
   <main class="form-container" style="background-color: lavender;">
@@ -125,20 +127,19 @@
         <label for="resume">Resume (PDF only) <span style="color: red;">*</span></label>
         <input type="file" id="resume" name="resume" accept=".pdf" required />
       </div>
-
       <div class="form-actions">
         <button type="submit">Submit</button>
         <button type="button" onclick="window.location.href='/viewApplications'">Cancel</button>
       </div>
     </form>
   </main>
-
   <script>
+    //Toggles the visibility of the dropdown menu
     function toggleDropdown() {
       const dropdown = document.getElementById("jobDropdown");
       dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
     }
-
+    //Updates job title fields based on the checkbox selection.
     function updateJobTitle() {
       const selected = document.querySelector('input[name="job_checkbox"]:checked');
       const value = selected ? selected.value : "";
@@ -149,16 +150,16 @@
       // Optional: close dropdown after selection
       document.getElementById("jobDropdown").style.display = "none";
     }
-
+    //Shows/hides employment-related form fields.
     function toggleEmploymentFields(isEmployed) {
       document.getElementById("employmentDetails").style.display = isEmployed ? "block" : "none";
     }
-
+    //Restricts input to numbers only.
     function restrictToNumbers(event) {
       event.target.value = event.target.value.replace(/\D/g, '');
     }
 
-    // Close dropdown when clicking outside
+    //Automatically hides the job dropdown when you click outside of it.
     window.addEventListener("click", function (e) {
       const container = document.querySelector(".dropdown-container");
       if (!container.contains(e.target)) {

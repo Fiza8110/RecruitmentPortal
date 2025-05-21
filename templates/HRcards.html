@@ -37,11 +37,11 @@
 
   <script>
 
-    validateToken();
-    document.addEventListener('DOMContentLoaded', function () {
-      const searchInput = document.getElementById('search-bar');
-      const applicationCards = document.querySelectorAll('.card');
-      const noResultsMessage = document.getElementById('no-results-message');
+    validateToken();//Calls the validateToken() function immediately to ensure only authorized users can access the page.
+    document.addEventListener('DOMContentLoaded', function () {////Ensures the code inside runs only after the HTML content has fully loaded.
+      const searchInput = document.getElementById('search-bar');//The search input field.
+      const applicationCards = document.querySelectorAll('.card');//All job application cards.
+      const noResultsMessage = document.getElementById('no-results-message');//The "No results found" message element.
 
       // Function to perform the search
       searchInput.addEventListener('input', function () {
@@ -70,7 +70,7 @@
         }
       });
     });
-
+    //Calls the validateToken() function immediately to ensure only authorized users can access the page.
     async function validateToken() {
       const token = localStorage.getItem("access_token");
 
@@ -81,6 +81,32 @@
       }
 
     }
+    const searchBar = document.getElementById("search-bar");
+    if (searchBar) {
+      searchBar.addEventListener("input", () => {
+        const query = searchBar.value.toLowerCase();
+        const cards = document.querySelectorAll(".card");
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const text = card.innerText.toLowerCase();
+          if (text.includes(query)) {
+            card.style.display = "block";
+            visibleCount++;
+          } else {
+            card.style.display = "none";
+          }
+        });
+
+        const noResultsDiv = document.getElementById("no-results");
+        if (visibleCount === 0) {
+          noResultsDiv.style.display = "block";
+        } else {
+          noResultsDiv.style.display = "none";
+        }
+      });
+    }
+
   </script>
 </body>
 

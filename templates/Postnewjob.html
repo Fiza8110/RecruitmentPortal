@@ -8,7 +8,6 @@
     <!-- ../static/JavaScript/Postnewjob.js -->
 </head>
 
-
 <body style="background-color: lavender;">
     <main>
         {% include 'Navbar.html' %}
@@ -48,14 +47,16 @@
                     <label for="location">Location <span style="color: red;">*</span></label>
                     <select id="Location" name="location" required>
                         <option value="">Select location</option>
-                        <option value="New York">New York</option>
-                        <option value="San Francisco">San Francisco</option>
-                        <option value="Los Angeles">Los Angeles</option>
                         <option value="Remote">Remote</option>
+                        <option value="Work From Office">Work From Office</option>
+                        <option value="Work From Home">Work From Home</option>
+                        <option value="Hybrid">Hybrid</option>
                     </select>
                 </div>
+
                 <button type="submit">Post Job</button>
             </form>
+
         </div>
     </main>
 </body>

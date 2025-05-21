@@ -47,7 +47,7 @@
       <p>{{ job.Job_Description }}</p>
       <p><strong>Skills:</strong> {{ job.Skills }}</p>
       <!-- <p><strong>Location:</strong> {{ job.Location }}</p> -->
-       <p><strong>Experience:</strong> {{ job.Experience}}</p>
+      <p><strong>Experience:</strong> {{ job.Experience}}</p>
       <div class="action-buttons">
         <button class="view-job-btn" data-id="{{ job._id }}">👁️ View Job
         </button>
@@ -59,6 +59,16 @@
   </main>
 
   <script>
+    // Token validation function
+    async function validateToken() {
+      const token = localStorage.getItem("access_token");
+      if (!token) {
+        alert("Unauthorized access. Please log in.");
+        window.location.href = "/Joblist";
+      }
+    }
+
+    // Call validateToken right away
     validateToken();
 
     document.addEventListener("DOMContentLoaded", () => {
@@ -74,8 +84,7 @@
       document.querySelectorAll(".edit-job-btn").forEach((button) => {
         button.addEventListener("click", (e) => {
           const jobId = e.target.getAttribute("data-id");
-         window.location.href = `/editJob/${jobId}`;
- // Redirect to edit form
+          window.location.href = `/editJob/${jobId}`;
         });
       });
 
@@ -112,21 +121,26 @@
       if (searchBar) {
         searchBar.addEventListener("input", () => {
           const query = searchBar.value.toLowerCase();
-          document.querySelectorAll(".card").forEach((card) => {
+          const cards = document.querySelectorAll(".card");
+          let visibleCount = 0;
+
+          cards.forEach((card) => {
             const text = card.innerText.toLowerCase();
-            card.style.display = text.includes(query) ? "block" : "none";
+            if (text.includes(query)) {
+              card.style.display = "block";
+              visibleCount++;
+            } else {
+              card.style.display = "none";
+            }
           });
+
+          const noResultsDiv = document.getElementById("no-results");
+          if (noResultsDiv) {
+            noResultsDiv.style.display = visibleCount === 0 ? "block" : "none";
+          }
         });
       }
     });
-
-    async function validateToken() {
-      const token = localStorage.getItem("access_token");
-      if (!token) {
-        alert("Unauthorized access. Please log in.");
-        window.location.href = "/Joblist";
-      }
-    }
   </script>
 
 </body>
