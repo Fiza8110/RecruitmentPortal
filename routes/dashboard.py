@@ -9,6 +9,7 @@ from bson import ObjectId
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
 import os
+from routes.home import   send_application_success_email
 from datetime import datetime
 import json
 from pydantic import BaseModel, EmailStr, Field
@@ -134,6 +135,9 @@ async def apply_job(
         # 4. insert into MongoDB
         result = APPLICATION_COL.insert_one(application_data)
         application_data["_id"] = str(result.inserted_id)
+        full_name = f"{first_name} {last_name}"
+        send_application_success_email(email, full_name, job_title)
+
 
         return JSONResponse(
             status_code=200,
@@ -197,15 +201,16 @@ async def view_details(request: Request, application_id: str):
 
     # Fetch the application details first
     application_data = APPLICATION_COL.find_one({"_id": obj_id})
+    print(application_data)
 
     if application_data:
-        # Only update status if it's empty or not set
-        if not application_data.get("status"):
+        # Update status if it is 'Applied'
+        if application_data.get("status") == "Applied":
             APPLICATION_COL.update_one(
                 {"_id": obj_id},
                 {"$set": {"status": "in-progress"}}
             )
-            # Fetch the updated document again
+            # Re-fetch updated data after update
             application_data = APPLICATION_COL.find_one({"_id": obj_id})
 
         application_data = serialize_objectid(application_data)  # Convert ObjectId
@@ -216,6 +221,7 @@ async def view_details(request: Request, application_id: str):
 
     else:
         return {"message": "Application not found!"}
+
 
 # to get post new job application
 @route.get("/postnewjob")

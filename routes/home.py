@@ -90,10 +90,15 @@ def send_email1(receiver_email, email_content):
 
     # Construct the email message
     message = f"""
-    {email_content}
+     Dear User,
 
-    Best Regards,
-    XYZ Company
+    We received a request to reset your password for your account at XYZ Company.
+     {email_content}
+
+    If you did not request this change, please ignore this email. Otherwise, please follow the instructions above to reset your password.
+
+    Best Regards,  
+    XYZ Company Support Team
     """
 
     msg = MIMEText(message)
@@ -120,13 +125,43 @@ def send_email1(receiver_email, email_content):
 #     # Return success response
 #     response_data = {"message": "mail sent successfully"}
 #     return JSONResponse(status_code=200, content=response_data)
+def send_application_success_email(receiver_email, name, job_title):
+    sender_email = "c31684901@gmail.com"
+    password = "ualbgpbeswgejwez"  # Use environment variable in production
 
+    subject = "Job Application Received"
+    message = f"""
+    Dear {name},
+    Thank you for applying for the position of {job_title} at our company.
+    We have received your application successfully.
+
+    Our recruitment team will review your submission and get back to you soon.
+
+    Best regards,  
+    HR Team
+    Exafluence
+    """
+
+    msg = MIMEText(message)
+    msg["Subject"] = subject
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+            smtp.starttls()
+            smtp.login(sender_email, password)
+            smtp.send_message(msg)
+        print(f"✅ Success email sent to {receiver_email}")
+    except Exception as e:
+        print(f"❌ Error sending email to {receiver_email}: {e}")
+
+        
 @route.post("/scheduleInterview")
 async def schedule_interview(request: ScheduleRequest):
     # Extract data from request
     action = request.action
-    # mail = request.to
-    mail = "fizajfiza2k1@gmail.com"  # Test email address, replace with actual email address when ready
+    mail = request.to
     date = request.date
     time = request.time
     reason = request.reason
@@ -136,19 +171,54 @@ async def schedule_interview(request: ScheduleRequest):
 
     if action == "scheduleInterviewBtn":
         # Send email for interview scheduling
-        email_content = f"Your interview is scheduled on {date} at {time}. Please join using the Google Meet link: https://meet.google.com/sample-link"
+        email_content = f"""
+        Dear Candidate,
+
+        We are pleased to inform you that your interview has been scheduled as per the details below:
+        📅 Date: {date} 
+        ⏰ Time: {time}  
+        🔗 Google Meet Link: https://meet.google.com/sample-link
+        
+        Please ensure you are available at least 10 minutes before the scheduled time and that you have a stable internet connection. The interview will be conducted virtually, so kindly join using the provided link.
+        
+        If you have any questions or concerns prior to the interview, feel free to reach out to us.
+
+        Best of luck!
+        Warm regards,  
+        HR Team
+        """
         send_email(mail, email_content)
-    
+
     elif action == "rejectApplicationBtn":
-        # APPLICATION_COL.update_one(
-        #         {"email": mail},
-        #         {"$set": {"status": "Rejected"}}
-        #     )
+        # Update application status to Rejected
+        APPLICATION_COL.update_one(
+           
+            {"email": mail},
+            {"$set": {
+                "status": "Rejected",
+                "rejectionReason": reason
+            }}
+        )
+        print(f"Candidate with email {mail} has been marked as Rejected for the following reason: {reason}")
         # Send rejection email
-        email_content = f"Dear candidate, your application has been rejected due to the following reason: {reason}."
+        email_content = f"""
+        Dear Candidate,
+
+        Thank you for taking the time to apply for the position at our company. We appreciate your interest and the effort you put into your application.
+
+        After careful consideration, we regret to inform you that your application has not been successful at this time. The reason for rejection is as follows:
+
+        Reason: {reason}
+
+        Please do not be discouraged, as this decision does not reflect your overall potential or abilities. We encourage you to apply for future opportunities that match your skills and experience.
+
+        We wish you all the best in your job search and future career endeavors.
+
+        Kind regards,  
+        HR Team
+        """
         send_email(mail, email_content)
 
     # Return success response
     response_data = {"message": "Mail sent successfully"}
     return JSONResponse(status_code=200, content=response_data)
-    
