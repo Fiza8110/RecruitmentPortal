@@ -169,7 +169,9 @@ def serialize_objectid(obj):
 #     return templates.TemplateResponse("HRcards.html", {"request": request, "applications_list": applications_list, "show_search": True})
 @route.get("/viewApplications")
 def view_applications(request: Request):#This function handles the request.
-    apps = list(APPLICATION_COL.find({}))#Fetches all applications from the db
+    # apps = list(APPLICATION_COL.find({}))#Fetches all applications from the db
+    # Fetch only applications with status "Applied" or "in-progress"
+    apps = list(APPLICATION_COL.find({"status": {"$in": ["Applied", "in-progress"]}}))
     # convert ObjectIds
     for a in apps:
         a["_id"] = str(a["_id"])#uses _id fields of type ObjectId ,converts each _id to a string 
@@ -365,7 +367,35 @@ async def post_add_candidate(
     # Redirect to HR cards view
     return RedirectResponse(url="/viewApplications", status_code=303)
 
+# List of all candidates
+@route.get("/listCandidates", response_class=HTMLResponse)
+async def list_candidates(request: Request):
+    candidates = list(APPLICATION_COL.find({}, {
+        "_id": 1,
+        "first_name": 1,
+        "last_name": 1,
+        "email": 1,
+        "status": 1
+    }))
 
+    candidates = [
+        {
+            "_id": str(candidate["_id"]),
+            "first_name": candidate.get("first_name", ""),
+            "last_name": candidate.get("last_name", ""),
+            "email": candidate.get("email", ""),
+            "status": candidate.get("status", "")
+        }
+        for candidate in candidates
+    ]
+
+    # JSON encode the candidates to a string
+    candidates_json = json.dumps(candidates)
+
+    return templates.TemplateResponse("ListCandidates.html", {
+        "request": request,
+        "candidates_json": candidates_json
+    })
 # route to download a specific application's resume
 @route.get("/downloadResume/{application_id}")
 async def download_resume(application_id: str):
