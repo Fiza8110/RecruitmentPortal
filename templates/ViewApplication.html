@@ -45,12 +45,12 @@
       {% endif %}
     </div>
 
-    <button class="btn" id="rejectApplicationBtn" onclick="openModal(event)">Reject Application</button>
-    <button class="btn" id="scheduleInterviewBtn" onclick="openModal(event)">Schedule Interview</button>
-    <button class="btn" id="updateStatusBtn" onclick="openStatusModal(event)">Update Candidate Status</button>
+    <button class="btn" id="rejectApplicationBtn" onclick="openModal(event)">Reject Application ❌</button>
+    <button class="btn" id="scheduleInterviewBtn" onclick="openModal(event)">Schedule Interview📆</button>
+  
     <!-- New Button -->
     <button class="btn" id="downloadResume" onclick="downloadResume('{{ application_data._id }}')">
-      Download Resume
+      Download Resume📥
     </button>
   </div>
 
@@ -91,31 +91,7 @@
   </div>
 
   <!-- New Modal for Updating Candidate Status -->
-  <div id="statusModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <form id="statusForm" class="job-form">
-        <h2>Update Candidate Status</h2>
-
-        <label for="emailStatus">Email:</label>
-        <input type="email" id="emailStatus" name="emailStatus" readonly><br><br>
-
-        <label for="status">Status:</label>
-        <select id="status" required>
-          <option value="">Select Status</option>
-          <option value="Applied">Applied</option>
-          <option value="Reviewed">Reviewed</option>
-          <option value="Interviewed">Interviewed</option>
-          <option value="Shortlisted">Shortlisted</option>
-          <option value="Selected">Selected</option>
-
-        </select><br><br>
-
-        <button type="submit" class="btn" id="modalActionButton">Update</button>
-      </form>
-    </div>
-  </div>
-
+ 
   <script>
     validateToken();
 

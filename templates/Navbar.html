@@ -13,28 +13,24 @@
       position: relative;
       width: 250px;
     }
-
     .search-container input {
-      width: 100%;
+      width: 80%;
       height: 40px;
-      padding-left: 40px;
-      border-radius: 40px;
+      padding-left: 20px;
       font-family: Poppins;
       font-weight: 400;
       font-size: 14px;
       color: black;
     }
-
     .search-container .search-icon {
       position: absolute;
       top: 50%;
-      left: 15px;
+      left: 16px;
       transform: translateY(-50%);
       color: gray;
       pointer-events: none;
       margin-left: 120px;
     }
-
     nav.navbar {
       position: fixed;
       top: 0;
@@ -44,12 +40,10 @@
       background-color: white;
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
-
     body {
       padding-top: 70px;
       overflow-x: hidden;
     }
-
     .nav-item .nav-link {
       border-radius: 25px;
       padding: 10px 20px;
@@ -58,6 +52,12 @@
 
     .navbar-nav .nav-item:not(:last-child) {
       margin-right: 15px;
+    }
+
+    .navbar-nav {
+      background-color: white;
+      border-radius: 20px;
+     
     }
 
     .nav-item.active .nav-link {
@@ -71,7 +71,7 @@
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light" style="height: 80px;">
     <div class="container-fluid">
-      <a class="navbar-brand" id="recruitmentLink" href="/hrDashboard">Recruitment Portal</a>
+      <a class="navbar-brand" id="recruitmentLink" href="/hrDashboard">Recruitment Portal 👤</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -94,7 +94,6 @@
             No Result Found
           </div>
         </div>
-
 
         <button class="btn btn-danger d-flex align-items-center ms-3" onclick="logout()">
           <i class="bi bi-box-arrow-right me-1"></i> Logout
@@ -145,6 +144,11 @@
               <i class="bi bi-person-plus"></i> Add Candidate
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/listCandidates">
+              <i class="bi bi-people"></i> Candidates
+            </a>
+          </li>
         `;
       }
 
@@ -154,54 +158,50 @@
         setTimeout(() => {
           const navLinksElements = document.querySelectorAll(".nav-item .nav-link");
           const currentPath = window.location.pathname;
-          console.log("Current Path:", currentPath);
           const recruitmentLink = document.getElementById("recruitmentLink");
+
           if (currentPath === "/hrDashboard" && recruitmentLink) {
             recruitmentLink.classList.add("active");
           }
+
           navLinksElements.forEach(link => {
             const href = link.getAttribute('href');
-            console.log("Checking link href:", href);
+
             const isActive =
               currentPath === href ||
               (currentPath.startsWith("/viewDetails") && href === "/viewApplications") ||
-              (role === "user" && currentPath.startsWith("/applayJob") && href === "/dashboard");
+              (role === "user" && currentPath.startsWith("/applayJob") && href === "/dashboard") ||
+              (currentPath === "/listCandidates" && href === "/listCandidates");
 
             if (isActive) {
-              console.log("Adding 'active' class to:", href);
               link.parentElement.classList.add("active");
             }
+
             link.addEventListener("click", function () {
               navLinksElements.forEach(item => item.parentElement.classList.remove("active"));
               link.parentElement.classList.add("active");
             });
           });
 
-
-          // Show search container only on specific pages
+          // Show search bar only on selected paths
           const searchContainer = document.getElementById("searchContainer");
-          const visiblePaths = ["/dashboard", "/viewApplications", "/joblist"];
-          if (searchContainer && visiblePaths.includes(currentPath)) {
+          const visiblePaths = ["/dashboard", "/viewApplications", "/joblist", "/listCandidates"];
+          if (visiblePaths.includes(currentPath)) {
             searchContainer.style.display = "block";
           } else {
             searchContainer.style.display = "none";
           }
+
         }, 50);
       }
     });
+
     function logout() {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("username");
-      localStorage.removeItem("email");
-      localStorage.removeItem("role");
       localStorage.clear();
-      const win = window.open("/login");
-      window.close();
+      const win = window.open("/login", "_self");
+      if (win) window.close();
     }
-
-
   </script>
-
 </body>
 
 </html>
