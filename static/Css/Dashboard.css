@@ -140,3 +140,19 @@ body {
     color: red;
     margin-top: 20px;
   }
+
+  .apply-btn {
+  margin-top: auto; /* Push the button to the bottom */
+  padding: 0.5rem 1rem;
+  background-color: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.apply-btn:hover {
+  background-color: #574b90;
+}
