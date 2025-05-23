@@ -7,33 +7,56 @@
   <title>Job Listings</title>
   <link rel="stylesheet" href="../static/Css/Dashboard.css">
   <style>
-    .action-buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
-    .action-buttons button {
-      padding: 6px 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+.card h2 {
+  margin-top: 0;
+}
 
-    .view-job-btn {
-      background-color: #4CAF50;
-      color: white;
-    }
+.card p {
+  margin: 6px 0;
+}
 
-    .edit-job-btn {
-      background-color: #FFA500;
-      color: white;
-    }
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto; /* Push to bottom */
+}
 
-    .delete-job-btn {
-      background-color: #f44336;
-      color: white;
-    }
+.action-buttons button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  flex: 1;
+  white-space: nowrap;
+}
+
+.view-job-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.edit-job-btn {
+  background-color: blueviolet;
+  color: white;
+}
+
+.delete-job-btn {
+  background-color: red;
+  color: white;
+}
+
   </style>
 </head>
 
@@ -48,12 +71,12 @@
       <p><strong>Skills:</strong> {{ job.Skills }}</p>
       <!-- <p><strong>Location:</strong> {{ job.Location }}</p> -->
       <p><strong>Experience:</strong> {{ job.Experience}}</p>
-      <div class="action-buttons">
-        <button class="view-job-btn" data-id="{{ job._id }}">👁️ View Job
-        </button>
-        <button class="edit-job-btn" data-id="{{ job._id }}" style="background-color: blueviolet;">📝</button>
-        <button class="delete-job-btn" data-id="{{ job._id }}" style="background-color: red;">🗑️ </button>
-      </div>
+<div class="action-buttons">
+  <button class="view-job-btn" data-id="{{ job._id }}" title="View Job">👁️</button>
+  <button class="edit-job-btn" data-id="{{ job._id }}" title="Edit Job">📝</button>
+  <button class="delete-job-btn" data-id="{{ job._id }}" title="Delete Job">🗑️</button>
+</div>
+
     </div>
     {% endfor %}
   </main>
