@@ -34,11 +34,9 @@ route.mount("/static", StaticFiles(directory = "static"), name = "static") # mou
 @route.get("/dashboard")
 async def dashboard(request: Request):
     user_email = request.session.get("user_email")
-    print(user_email)
-
     jobs_list = list(JObs_COL.find({}))
     applied_jobs = list(APPLICATION_COL.find({"email": user_email}))
-   
+
     applied_job_titles = {job["job_title"] for job in applied_jobs}
     print(jobs_list)
     print(applied_jobs)
@@ -59,6 +57,7 @@ def hrDashboard(request: Request):
 def forgotPassword(request: Request):
   
     return templates.TemplateResponse("ForgotPassword.html", {"request": request})
+
 
 # route to render job apply html page
 @route.get("/applayJob")
@@ -161,12 +160,6 @@ def serialize_objectid(obj):
     else:
         return obj
 
-# route to view applications
-# @route.get("/viewApplications")
-# def viewApplications(request: Request):
-#     applications_list = list(APPLICATION_COL.find({}))
-#     applications_list = serialize_objectid(applications_list)  # Convert ObjectId to string
-#     return templates.TemplateResponse("HRcards.html", {"request": request, "applications_list": applications_list, "show_search": True})
 @route.get("/viewApplications")
 def view_applications(request: Request):#This function handles the request.
     # apps = list(APPLICATION_COL.find({}))#Fetches all applications from the db
@@ -181,16 +174,6 @@ def view_applications(request: Request):#This function handles the request.
         "show_search": True
     })
 
-# Function to convert ObjectId to string
-# def serialize_objectid(obj):
-#     """ Helper function to convert ObjectId to string for JSON serialization """
-#     if isinstance(obj, ObjectId):
-#         return str(obj)
-#     elif isinstance(obj, list):
-#         return [serialize_objectid(item) for item in obj]
-#     elif isinstance(obj, dict):
-#         return {key: serialize_objectid(value) for key, value in obj.items()}
-#     return obj
 @route.get("/candidateApplications")
 def hrDashboard(request: Request):
     user_email = request.session.get("user_email")
@@ -308,10 +291,7 @@ async def hrDashboard(request: Request, data: dict):#Defines an asynchronous fun
 
 from fastapi.responses import FileResponse
 
-# @route.get("/add-candidate")
-# def get_add_candidate(request: Request):
-#     job_titles = [job["Job_Title"] for job in JObs_COL.find({}, {"_id": 0, "Job_Title": 1})]
-#     return templates.TemplateResponse("AddCandidate.html", {"request": request, "job_titles": job_titles})
+
 @route.get("/add-candidate")
 def get_add_candidate(request: Request):
     # pull current jobs
@@ -396,16 +376,29 @@ async def list_candidates(request: Request):
         "request": request,
         "candidates_json": candidates_json
     })
-# route to download a specific application's resume
 @route.get("/downloadResume/{application_id}")
 async def download_resume(application_id: str):
     application_data = APPLICATION_COL.find_one({"_id": ObjectId(application_id)})
+    print(application_data, 'application data')
+
+    # Check both possible keys
+    resume_path = application_data.get("resume") or application_data.get("resume_path")
+
+    if resume_path:
+        import os
+        resume_path = os.path.normpath(resume_path)  # Normalize path separators
+        if os.path.exists(resume_path):
+            return FileResponse(
+                resume_path,
+                filename=os.path.basename(resume_path),
+                media_type="application/pdf"
+            )
+        else:
+            raise HTTPException(status_code=404, detail="Resume file does not exist on server.")
     
-    if application_data and "resume" in application_data:
-        resume_path = application_data["resume"]
-        return FileResponse(resume_path, filename=resume_path.split("/")[-1], media_type="application/pdf")
-    
-    raise HTTPException(status_code=404, detail="Resume not found")
+    raise HTTPException(status_code=404, detail="Resume not found in application data.")
+
+
 @route.delete("/deleteApplication/{application_id}")
 async def delete_application(application_id: str):
     """
