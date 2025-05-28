@@ -21,7 +21,7 @@ async function postJob(event) {
 
     try {
         // Send data to the backend
-        const response = await fetch("http://127.0.0.1:8000/postnewjob", {
+        const response = await fetch("/postnewjob", {
             method: "POST",
             headers: {//Headers indicate that the request body is in JSON format.
                 "Content-Type": "application/json",  // Set header for JSON
