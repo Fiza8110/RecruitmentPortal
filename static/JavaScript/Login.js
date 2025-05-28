@@ -15,10 +15,11 @@ async function login(event) {
 
         console.log("Form Data:", email, password); // Check data before sending
         //Sends a POST request to the backend /login endpoint.
-        fetch("/login", {
+        const response = await fetch("/login", {
             method: "POST",
             body: formData,
         });
+
 
         console.log("Raw Response:", response); // Log response object
         //This waits for the HTTP response body to be read as plain text.
