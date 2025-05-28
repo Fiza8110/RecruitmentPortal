@@ -15,7 +15,7 @@ async function login(event) {
 
         console.log("Form Data:", email, password); // Check data before sending
         //Sends a POST request to the backend /login endpoint.
-        const response = await fetch("http://127.0.0.1:8000/login", {//Waits for the response from the server.
+        fetch("/login", {
             method: "POST",
             body: formData,
         });
