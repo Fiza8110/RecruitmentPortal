@@ -145,7 +145,7 @@
       };
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/updateCandidateStatus", {
+        const response = await fetch("/updateCandidateStatus", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -189,7 +189,7 @@
     }
 
     function downloadResume(applicationId) {
-      window.location.href = `http://127.0.0.1:8000/downloadResume/${applicationId}`;
+      window.location.href = `/downloadResume/${applicationId}`;
     }
 
     function openModal(event) {
@@ -259,7 +259,7 @@
       };
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/scheduleInterview", {
+        const response = await fetch("/scheduleInterview", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
@@ -291,7 +291,7 @@
       };
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/scheduleInterview", {
+        const response = await fetch("/scheduleInterview", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
