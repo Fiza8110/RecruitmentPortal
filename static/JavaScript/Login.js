@@ -8,23 +8,13 @@ async function login(event) {
         const formData = new FormData();
         formData.append("username", email);
         formData.append("password", password);
-
-        console.log("Form Data:", email, password);
-
-        // ✅ Assign fetch result to `response`
         const response = await fetch("/login", {
             method: "POST",
             body: formData,
         });
 
-        console.log("Raw Response:", response);
-
         const responseText = await response.text();
-        console.log("Response Text:", responseText);
-
         const result = JSON.parse(responseText);
-        console.log("Parsed Response:", result);
-
         if (response.ok) {
             localStorage.setItem("access_token", result.access_token);
             localStorage.setItem("username", result.username);
