@@ -223,7 +223,7 @@ def job_details(request: Request, job_id: str):#{job_id} is a path parameter
     job = JObs_COL.find_one({"_id": ObjectId(job_id)})#ObjectId(job_id) to convert the string into a MongoDB ObjectId.
     if job:
         job = serialize_objectid(job)  # Convert ObjectId to string
-        return templates.TemplateResponse("JobDetails.html", {"request": request, "job": job})
+        return templates.TemplateResponse("Jobdetails.html", {"request": request, "job": job})
     else:
         raise HTTPException(status_code=404, detail="Job not found")
 # Route to render edit job page
