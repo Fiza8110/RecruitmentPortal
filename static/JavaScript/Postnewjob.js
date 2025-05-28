@@ -33,7 +33,7 @@ async function postJob(event) {
         if (response.ok) {
             alert("job posted successfully")
             // showAlert("Job posted successfully!");
-            window.location.href = "/jobList"
+            window.location.href = "/joblist"
         } else {
             alert(result.msg || "something went wrong"); 
         }
