@@ -341,7 +341,10 @@ async def post_add_candidate(
         "current_ctc": current_ctc,
         "expected_ctc": expected_ctc,
         "notice_period": notice_period,
-        "resume_path": resume_path
+        "resume_path": resume_path,
+        "status": "Applied",
+        "added_on": datetime.utcnow().isoformat(),
+
     })
 
     # Redirect to HR cards view
