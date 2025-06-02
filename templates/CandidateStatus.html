@@ -19,9 +19,10 @@
       margin-top: 60px;
       font-size: 2rem;
     }
+   
 
     table {
-      width: 90%;
+      width: 80%;
       max-width: 1000px;
       margin: 40px auto;
       border-collapse: collapse;
@@ -29,6 +30,9 @@
       border-radius: 10px;
       overflow: hidden;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      border: 1px solid #ccc;
+
+      /* outer border */
     }
 
     th,
@@ -36,23 +40,23 @@
       padding: 18px 22px;
       text-align: left;
       font-size: 15px;
-      border-bottom: 1px solid #e0e0e0;
+     border: 1px solid black;
+      /* add full border around each cell */
     }
 
     th {
-      background-color: #007bff;
+      background-color: rgb(134, 131, 185);
       color: white;
       text-transform: uppercase;
       font-size: 14px;
       letter-spacing: 0.6px;
-    }
 
-    tr:last-child td {
-      border-bottom: none;
+      
     }
 
     td:last-child {
       text-align: center;
+      margin-right: 20px;
     }
 
     .status {
@@ -116,6 +120,9 @@
         padding: 12px 20px;
         text-align: right;
         position: relative;
+        border: none;
+        /* hide borders in mobile */
+        border-bottom: 1px solid #eee;
       }
 
       td::before {
@@ -131,29 +138,30 @@
 
       td:last-child {
         text-align: right;
+        border-bottom: none;
       }
     }
   </style>
 
 </head>
 
-<body>
+<body style="background-color: lavender;">
   {% include 'Navbar.html' %}
   <h1 style="margin-top: 50px;">My Job Applications👨‍💼</h1>
   <table>
     <thead>
       <tr>
-        <th>Job Title</th>
-        <th>Date Applied</th>
-        <th>Status</th>
+        <th style="text-align: center;">Job Title</th>
+        <th style="text-align: center;">Date Applied</th>
+        <th style="text-align: center;">Status</th>
       </tr>
     </thead>
     <tbody>
       {% for app in applications %}
       <tr>
-        <td>{{ app.job_title }}</td>
-        <td>{{ app.applied_on[:10] }}</td>
-        <td>
+        <td style="text-align: center;">{{ app.job_title }}</td>
+        <td style="text-align: center;">{{ app.applied_on[:10] }}</td>
+        <td style="text-align: center;">
           <span class="status {{ app.status|lower|replace(' ', '-') | default('pending') }}">
             {{ app.status | default("Pending") }}
           </span>
