@@ -1,23 +1,24 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    background-image: url('assets/bghr1.png'); /* Replace with your image path */
-    background-size: cover;
+    background-color: lavender;
+    /* background-image: url('assets/bghr1.png'); Replace with your image path */
+    /* background-size: cover;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: fixed; */
     margin: 0;
     padding: 0;
 }
 
 .dashboard-container {
     text-align: center;
-    border: 2px solid #333; /* Border for the container */
+    border: 1px solid #333; /* Border for the container */
     border-radius: 8px;
     padding: 3rem;
+
     width: 350px; /* Small container width */
-    background-color: transparent; /* No background color */
+    background-color:white; /* No background color */
     margin-left: 38%;
-    margin-top: 18%;
+    margin-top: 4%;
 }
 
 .dashboard-header {
@@ -34,17 +35,18 @@ body {
 }
 
 .dashboard-btn {
-    border: 2px solid black; /* Border for buttons */
-    background-color: transparent; /* Transparent background */
-    color: black; /* Blue text color */
+    border: 2px solid  rgb(134, 131, 185); 
+    background-color:rgb(134, 131, 185); ; /* Transparent background */
+    color: white; /* Blue text color */
     font-size: 1rem;
     padding: 0.8rem;
     border-radius: 4px;
     cursor: pointer;
     transition: all 0.3s ease;
+    border-radius: 15px;
 }
 
 .dashboard-btn:hover {
-    background-color: #007BFF; /* Blue background on hover */
+    background-color: #0056b3 ; /* Blue background on hover */
     color: white; /* White text on hover */
 }

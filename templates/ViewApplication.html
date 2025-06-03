@@ -15,11 +15,11 @@
   <div class="card">
     <div id="details-container">
       <div class="header-content">
-<div class="action-icons" style="display: flex; justify-content: space-between; align-items: center;">
-  <i class="fas fa-times action-icon icon-cancel" data-tooltip="Cancel" onclick="handleCancel()"></i>
-  <i class="fas fa-trash action-icon icon-delete" data-tooltip="Delete"
-     onclick="confirmDelete('{{ application_data._id }}')"></i>
-</div>
+        <div class="action-icons" style="display: flex; justify-content: space-between; align-items: center;">
+          <i class="fas fa-times action-icon icon-cancel" data-tooltip="Cancel" onclick="handleCancel()"></i>
+          <i class="fas fa-trash action-icon icon-delete" data-tooltip="Delete"
+            onclick="confirmDelete('{{ application_data._id }}')"></i>
+        </div>
 
         <h2>{{ application_data.job_title }}</h2>
 
@@ -31,24 +31,24 @@
       <div class="detail-row"><strong>Phone:</strong> <span>{{ application_data.mobile }}</span></div>
 
       {% if application_data.current_employee == "yes" %}
-      
+
       <div class="detail-row"><strong>Company Name:</strong> <span>{{ application_data.company_name }}</span></div>
       <div class="detail-row"><strong>Company Location:</strong> <span>{{ application_data.company_location }}</span>
-        
+
       </div>
       <div class="detail-row"><strong>Experience: </strong> <span>{{ application_data.experience}}</span></div>
       <div class="detail-row"><strong>Current CTC:</strong> <span>{{ application_data.current_ctc }}</span></div>
       <div class="detail-row"><strong>Expected CTC:</strong> <span>{{ application_data.expected_ctc }}</span></div>
       <div class="detail-row"><strong>Notice Period:</strong> <span>{{ application_data.notice_period }}</span></div>
       {% else %}
-     
+
       <p>This candidate doesn't have any experience.</p>
       {% endif %}
     </div>
 
     <button class="btn" id="rejectApplicationBtn" onclick="openModal(event)">Reject Application ❌</button>
     <button class="btn" id="scheduleInterviewBtn" onclick="openModal(event)">Schedule Interview📆</button>
-  
+
     <!-- New Button -->
     <button class="btn" id="downloadResume" onclick="downloadResume('{{ application_data._id }}')">
       Download Resume📥
@@ -81,8 +81,8 @@
             <option value="Experience not sufficient">Experience not sufficient</option>
             <option value="Position filled">Position filled</option>
             <option value="Poor communication skills">Poor communication skills</option>
-             <option value="No response from candidate">No response from candidate</option>
-              <option value="Offer declined by candidate">Offer declined by candidate</option>
+            <option value="No response from candidate">No response from candidate</option>
+            <option value="Offer declined by candidate">Offer declined by candidate</option>
           </select><br><br>
         </div>
 
@@ -92,24 +92,24 @@
   </div>
 
   <!-- New Modal for Updating Candidate Status -->
- 
+
   <script>
     validateToken();
 
-     const modal = document.getElementById("myModal");
-  const closeBtn = document.querySelector(".close");
+    const modal = document.getElementById("myModal");
+    const closeBtn = document.querySelector(".close");
 
-  // Close modal on clicking the close icon
-  closeBtn.onclick = function () {
-    modal.style.display = "none";
-  };
-
-  // Optional: close modal if user clicks outside the modal content
-  window.onclick = function (event) {
-    if (event.target === modal) {
+    // Close modal on clicking the close icon
+    closeBtn.onclick = function () {
       modal.style.display = "none";
-    }
-  };
+    };
+
+    // Optional: close modal if user clicks outside the modal content
+    window.onclick = function (event) {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    };
 
     function openStatusModal(event) {
       const modal = document.getElementById("statusModal");
