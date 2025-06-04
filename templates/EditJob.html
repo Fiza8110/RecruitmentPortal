@@ -81,16 +81,15 @@
 
     .btn.save {
       background-color: rgb(134, 131, 185);
-      ;
       color: white;
     }
 
     .btn.save:hover:not(:disabled) {
-      background-color: #574b90;
+      background-color: rgb(134, 131, 185);
     }
 
     .btn.save:disabled {
-      background-color: #a3a1f7;
+      background-color: rgb(134, 131, 185);
       cursor: not-allowed;
     }
 
@@ -134,7 +133,7 @@
       <input type="hidden" name="job_id" value="{{ job._id }}" />
 
       <div class="field">
-        <label for="Job_Title">Job Title <span style="color: red;">*</span></label>
+        <label for="Job_Title">Job Title <span style="color: red;">*</span> </label>
         <input type="text" name="Job_Title_display" value="{{ job.Job_Title }}" disabled />
         <input type="hidden" name="Job_Title" value="{{ job.Job_Title }}" />
       </div>
@@ -160,7 +159,7 @@
       </div>
 
       <div class="button-group">
-        <button type="submit" style="background-color: rgb(134, 131, 185); " class="btn save" disabled>Save</button>
+        <button type="submit" class="btn save" disabled>Save</button>
       </div>
     </form>
   </div>
