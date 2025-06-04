@@ -7,56 +7,56 @@
   <title>Job Listings</title>
   <link rel="stylesheet" href="../static/Css/Dashboard.css">
   <style>
-    .card {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100%;
-      padding: 16px;
-      border-radius: 8px;
-      background-color: white;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    }
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
 
-    .card h2 {
-      margin-top: 0;
-    }
+.card h2 {
+  margin-top: 0;
+}
 
-    .card p {
-      margin: 6px 0;
-    }
+.card p {
+  margin: 6px 0;
+}
 
-    .action-buttons {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: auto;
-      /* Push to bottom */
-    }
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: auto; /* Push to bottom */
+}
 
-    .action-buttons button {
-      padding: 6px 10px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      flex: 1;
-      white-space: nowrap;
-    }
+.action-buttons button {
+  padding: 6px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  flex: 1;
+  white-space: nowrap;
+}
 
-    .view-job-btn {
-      background-color: #4CAF50;
-      color: white;
-    }
+.view-job-btn {
+  background-color: #4CAF50;
+  color: white;
+}
 
-    .edit-job-btn {
-      background-color: blueviolet;
-      color: white;
-    }
+.edit-job-btn {
+  background-color: blueviolet;
+  color: white;
+}
 
-    .delete-job-btn {
-      background-color: red;
-      color: white;
-    }
+.delete-job-btn {
+  background-color: red;
+  color: white;
+}
+
   </style>
 </head>
 
@@ -71,11 +71,11 @@
       <p><strong>Skills:</strong> {{ job.Skills }}</p>
       <!-- <p><strong>Location:</strong> {{ job.Location }}</p> -->
       <p><strong>Experience:</strong> {{ job.Experience}}</p>
-      <div class="action-buttons">
-        <button class="view-job-btn" data-id="{{ job._id }}" title="View Job">👁️</button>
-        <button class="edit-job-btn" data-id="{{ job._id }}" title="Edit Job">📝</button>
-        <button class="delete-job-btn" data-id="{{ job._id }}" title="Delete Job">🗑️</button>
-      </div>
+<div class="action-buttons">
+  <button class="view-job-btn" data-id="{{ job._id }}" title="View Job">👁️</button>
+  <button class="edit-job-btn" data-id="{{ job._id }}" title="Edit Job">📝</button>
+  <button class="delete-job-btn" data-id="{{ job._id }}" title="Delete Job">🗑️</button>
+</div>
 
     </div>
     {% endfor %}

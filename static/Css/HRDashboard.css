@@ -1,24 +1,23 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: lavender;
-    /* background-image: url('assets/bghr1.png'); Replace with your image path */
-    /* background-size: cover;
+    
+    background-image: url('assets/hrbackg1.jpg'); 
+    background-size: cover;
     background-repeat: no-repeat;
-    background-attachment: fixed; */
+    background-attachment: fixed;
     margin: 0;
     padding: 0;
 }
 
 .dashboard-container {
     text-align: center;
-    border: 1px solid #333; /* Border for the container */
-    border-radius: 8px;
+    border: 1px solid #333; 
+     border-radius: 8px;
     padding: 3rem;
-
-    width: 350px; /* Small container width */
-    background-color:white; /* No background color */
+    width: 380px;  
+    background-color: white; 
     margin-left: 38%;
-    margin-top: 4%;
+    margin-top: 5%;
 }
 
 .dashboard-header {

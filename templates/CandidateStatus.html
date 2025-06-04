@@ -20,42 +20,51 @@
       font-size: 2rem;
     }
 
-
     table {
       width: 80%;
       max-width: 1000px;
       margin: 40px auto;
-      border-collapse: collapse;
+      border-collapse: separate;
+      /* Important: allow separate borders */
+      border-spacing: 0;
+      /* No space between cells */
       background-color: #ffffff;
       border-radius: 10px;
+      /* Rounded corners */
       overflow: hidden;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      border: 1px solid #ccc;
-      /* outer border */
+      border: 2px solid #333;
+      /* Visible outer border */
+      text-align: center;
     }
 
     th,
     td {
       padding: 18px 22px;
-      text-align: left;
       font-size: 15px;
-      border: 1px solid black;
-      /* add full border around each cell */
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+      border: 1px solid #999;
+      /* Medium-gray for visible cell lines */
+      background-color: white;
     }
 
     th {
       background-color: rgb(134, 131, 185);
       color: white;
-      text-transform: uppercase;
+    }
+
+    th {
+      background-color: rgb(134, 131, 185);
+      color: white;
       font-size: 14px;
       letter-spacing: 0.6px;
-
-
+      text-align: center;
     }
 
     td:last-child {
       text-align: center;
-      margin-right: 20px;
     }
 
     .status {
@@ -93,6 +102,12 @@
       color: white;
     }
 
+    /* Zebra striping */
+    tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    /* Mobile responsive view */
     @media (max-width: 768px) {
 
       table,
@@ -112,7 +127,6 @@
         margin-bottom: 15px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         border-radius: 10px;
-        overflow: hidden;
       }
 
       td {
@@ -120,7 +134,6 @@
         text-align: right;
         position: relative;
         border: none;
-        /* hide borders in mobile */
         border-bottom: 1px solid #eee;
       }
 
@@ -150,17 +163,17 @@
   <table>
     <thead>
       <tr>
-        <th style="text-align: center;">Job Title</th>
-        <th style="text-align: center;">Date Applied</th>
-        <th style="text-align: center;">Status</th>
+        <th>Job Title</th>
+        <th>Date Applied</th>
+        <th>Status</th>
       </tr>
     </thead>
     <tbody>
       {% for app in applications %}
       <tr>
-        <td style="text-align: center;">{{ app.job_title }}</td>
-        <td style="text-align: center;">{{ app.applied_on[:10] }}</td>
-        <td style="text-align: center;">
+        <td>{{ app.job_title }}</td>
+        <td>{{ app.applied_on[:10] }}</td>
+        <td>
           <span class="status {{ app.status|lower|replace(' ', '-') | default('pending') }}">
             {{ app.status | default("Pending") }}
           </span>

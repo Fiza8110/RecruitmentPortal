@@ -134,28 +134,28 @@
       <input type="hidden" name="job_id" value="{{ job._id }}" />
 
       <div class="field">
-        <label for="Job_Title">Job Title</label>
+        <label for="Job_Title">Job Title <span style="color: red;">*</span></label>
         <input type="text" name="Job_Title_display" value="{{ job.Job_Title }}" disabled />
         <input type="hidden" name="Job_Title" value="{{ job.Job_Title }}" />
       </div>
 
       <div class="field">
-        <label for="Job_Description">Description</label>
+        <label for="Job_Description">Description <span style="color: red;">*</span></label>
         <textarea name="Job_Description" rows="4" required>{{ job.Job_Description }}</textarea>
       </div>
 
       <div class="field">
-        <label for="Skills">Skills</label>
+        <label for="Skills">Skills <span style="color: red;">*</span></label>
         <input type="text" name="Skills" value="{{ job.Skills }}" required />
       </div>
 
       <div class="field">
-        <label for="Location">Location</label>
+        <label for="Location">Location <span style="color: red;">*</span></label>
         <input type="text" name="Location" value="{{ job.Location }}" required />
       </div>
 
       <div class="field">
-        <label for="Experience">Experience</label>
+        <label for="Experience">Experience <span style="color: red;">*</span></label>
         <input type="text" name="Experience" value="{{ job.Experience }}" required />
       </div>
 
