@@ -23,18 +23,6 @@ contactus = "contactus.html"
 def home(request: Request): 
     return templates.TemplateResponse("Signup.html", {"request": request})
 
-# ##############----------------------contact us route------------------#####################
-# # Route to render contact html page
-# @route.get("/contactus")
-# def contact(request:Request):
-#     return templates.TemplateResponse(contactus, {"request" : request})
-
-# @route.post("/contactus")
-# def contact(request:Request, name:str=Form(), email:str=Form(), msg:str=Form()):
-#     print(name,email,msg)
-#     if name and email and msg:
-#         return templates.TemplateResponse(contactus, {"request" : request, "message" : "Successfully Submitted the request"})
-#     return templates.TemplateResponse(contactus, {"request" : request})
 
 user_data = {}
 # Email settings
@@ -56,10 +44,10 @@ class ScheduleRequest(BaseModel):
     reason: str = None  # Optional, only for rejection
 
 
-def send_email(receiver_email, email_content):
+def send_email(receiver_email, email_content,subject):
     sender_email = "c31684901@gmail.com"
     password = "ualbgpbeswgejwez"  
-    subject = "Scheduled Interview"
+    # subject = "Scheduled Interview"
 
     # Construct the email message
     message = f"""
@@ -90,10 +78,10 @@ def send_email1(receiver_email, email_content):
 
     # Construct the email message
     message = f"""
-     Dear User,
+    Dear User,
 
     We received a request to reset your password for your account at XYZ Company.
-     {email_content}
+    {email_content}
 
     If you did not request this change, please ignore this email. Otherwise, please follow the instructions above to reset your password.
 
@@ -116,15 +104,6 @@ def send_email1(receiver_email, email_content):
     except Exception as e:
         print(f"Error sending email: {e}")
 
-# @route.post("/scheduleInterview")  # Fix route decorator
-# async def forgot_password_post(request: Request, mail: str = Form(...)):
-#     global user_data
-#     mail = "m.prakash9977@gmail.com"
-#     send_email(mail,"19th Feb 2025, 3:00 PM")
-
-#     # Return success response
-#     response_data = {"message": "mail sent successfully"}
-#     return JSONResponse(status_code=200, content=response_data)
 def send_application_success_email(receiver_email, name, job_title):
     sender_email = "c31684901@gmail.com"
     password = "ualbgpbeswgejwez"  # Use environment variable in production
@@ -187,7 +166,7 @@ async def schedule_interview(request: ScheduleRequest):
         Warm regards,  
         HR Team
         """
-        send_email(mail, email_content)
+        send_email(mail, email_content,"Schedule Interview")
 
     elif action == "rejectApplicationBtn":
         # Update application status to Rejected
@@ -217,7 +196,7 @@ async def schedule_interview(request: ScheduleRequest):
         Kind regards,  
         HR Team
         """
-        send_email(mail, email_content)
+        send_email(mail, email_content,"Rejection")
 
     # Return success response
     response_data = {"message": "Mail sent successfully"}
