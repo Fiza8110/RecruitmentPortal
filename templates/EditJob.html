@@ -155,7 +155,8 @@
 
       <div class="field">
         <label for="Experience">Experience <span style="color: red;">*</span></label>
-        <input type="text" name="Experience" value="{{ job.Experience }}" required />
+        <input type="number" name="Experience" value="{{ job.Experience }}" required min="0" step="1"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
       </div>
 
       <div class="button-group">

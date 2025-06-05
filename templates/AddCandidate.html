@@ -201,22 +201,26 @@
 
         <div class="form-group">
           <label for="experience">Experience (in years) <span style="color: red;">*</span></label>
-          <input type="number" id="experience" name="experience" min="0" placeholder="Experience" />
+          <input type="number" id="experience" name="experience" min="0" placeholder="Experience" min="0"
+                        step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
         </div>
 
         <div class="form-group">
           <label for="current_ctc">Current CTC <span style="color: red;">*</span></label>
-          <input type="text" id="current_ctc" name="current_ctc" placeholder="Current CTC"/>
+          <input type="number" id="current_ctc" name="current_ctc" placeholder="Current CTC"  min="0"
+                        step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
         </div>
 
         <div class="form-group">
           <label for="expected_ctc">Expected CTC <span style="color: red;">*</span></label>
-          <input type="text" id="expected_ctc" name="expected_ctc" placeholder="Expected CTC" />
+          <input type="number" id="expected_ctc" name="expected_ctc" placeholder="Expected CTC"   min="0"
+                        step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
         </div>
 
         <div class="form-group">
           <label for="notice_period">Notice Period (in days) <span style="color: red;">*</span></label>
-          <input type="number" id="notice_period" name="notice_period" min="0"placeholder="Notice Period" />
+          <input type="number" id="notice_period" name="notice_period" min="0"placeholder="Notice Period"  min="0"
+                        step="1" oninput="this.value = this.value.replace(/[^0-9]/g, '')"/>
         </div>
       </div>
 
