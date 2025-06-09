@@ -74,15 +74,13 @@ background-color: rgba(0,0,0,0.4);  */
 /* Modal Content - Centering it properly */
 .modal-content {
   background-color: #fefefe;
-  padding: 20px;
+  padding: 23px;
   border: 1px solid #888;
   border-radius: 8px;
   width: 40%;
   max-width: 500px;
   /* Ensures it doesn't get too large on big screens */
-
-  /* Centering */
-  position: fixed;
+  position: fixed; /* Centering */
   /* Ensures it stays in the center even when scrolling */
   top: 50%;
   left: 50%;
