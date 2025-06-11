@@ -1,51 +1,57 @@
 body {
-    font-family: Arial, sans-serif;
-    
-    background-image: url('assets/hrbackg1.jpg'); 
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  background-image: url('assets/hrbackg1.jpg');
+  /* Background image path */
+  background-size: cover;
+  /* Make the image cover the entire screen */
+  background-position: center;
+  /* Center the image */
+  background-repeat: no-repeat;
 }
 
 .dashboard-container {
-    text-align: center;
-    border: 1px solid #333; 
-     border-radius: 8px;
-    padding: 3rem;
-    width: 380px;  
-    background-color: white; 
-    margin-left: 38%;
-    margin-top: 5%;
+  padding: 30px;
+  max-width: 1200px;
+  margin: auto;
 }
 
-.dashboard-header {
-    margin: 0;
-    margin-bottom: 1.5rem;
-    font-size: 1.5rem;
-    color: black; /* Dark text color */
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
 }
 
-.button-group {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem; /* Space between buttons */
+.dashboard-card {
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  width: 264px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
 }
 
-.dashboard-btn {
-    border: 2px solid  rgb(134, 131, 185); 
-    background-color:rgb(134, 131, 185); ; /* Transparent background */
-    color: white; /* Blue text color */
-    font-size: 1rem;
-    padding: 0.8rem;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border-radius: 15px;
+.dashboard-card:hover {
+  transform: translateY(-5px);
 }
 
-.dashboard-btn:hover {
-    background-color: #0056b3 ; /* Blue background on hover */
-    color: white; /* White text on hover */
+.card-icon {
+  font-size: 32px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.card-number {
+  font-size: 26px;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.card-subtitle {
+  font-size: 14px;
+  color: #555;
 }

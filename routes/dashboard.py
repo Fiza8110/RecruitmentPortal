@@ -2,12 +2,13 @@ from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import OAuth2PasswordBearer
-from config.config import JObs_COL,APPLICATION_COL
+from config.config import JObs_COL,APPLICATION_COL,REGISTER_COL
 from fastapi import FastAPI, Form, File, UploadFile, Request
 from fastapi.responses import RedirectResponse, JSONResponse
 from bson import ObjectId
 from fastapi import APIRouter, Request, HTTPException
 from fastapi.responses import HTMLResponse
+from datetime import datetime, timedelta
 import os
 from routes.home import   send_application_success_email
 from datetime import datetime
@@ -48,10 +49,32 @@ async def dashboard(request: Request):
     })
 
 # route to render HR dashboard html page
-@route.get("/hrDashboard")
-def hrDashboard(request: Request):
-    return templates.TemplateResponse("HRDashboard.html", {"request": request})
+@route.get("/hrDashboard", response_class=HTMLResponse)
+async def hrDashboard(request: Request):
+    # Total Candidates
+    total_candidates = APPLICATION_COL.count_documents({})
 
+    # Total Admin Users (assuming role field exists as 'admin')
+    total_users = REGISTER_COL.count_documents({"role": "admin"})
+
+    # Total Job Postings
+    total_jobs = JObs_COL.count_documents({})
+
+    # New Applications in last 7 days
+    last_week = datetime.now() - timedelta(days=7)
+    new_applications = APPLICATION_COL.count_documents({"created_at": {"$gte": last_week}})
+
+    # Pending Approvals (assuming status field has "pending" or "in progress")
+    pending_approvals = APPLICATION_COL.count_documents({"status": {"$in": ["pending", "in progress"]}})
+
+    return templates.TemplateResponse("HRDashboard.html", {
+        "request": request,
+        "total_candidates": total_candidates,
+        "total_users": total_users,
+        "total_jobs": total_jobs,
+        "new_applications": new_applications,
+        "pending_approvals": pending_approvals
+    })
 # route to render forgot password html page
 @route.get("/forgotPassword")
 def forgotPassword(request: Request):

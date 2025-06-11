@@ -1,54 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR Dashboard</title>
-    <link rel="stylesheet" href="../static/Css/HRDashboard.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HR Dashboard</title>
+  <link rel="stylesheet" href="/static/Css/HRDashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
-
 <body>
-    {% include 'Navbar.html' %}
-    <main>
-        <div class="dashboard-container">
-            <h1 class="dashboard-header">HR Dashboard</h1>
-            <div class="button-group">
-                <button class="dashboard-btn" onclick="window.location.href='/viewApplications'">
-                    View Applications <i class="fas fa-eye"></i>
-                </button>
-                <button class="dashboard-btn" onclick="window.location.href='/postnewjob'">
-                    Post New Job <i class="fas fa-briefcase"></i>
-                </button>
-                <button class="dashboard-btn" onclick="window.location.href='/add-candidate'">
-                    Add Candidate <i class="fas fa-user-plus"></i>
-                </button>
-                <button class="dashboard-btn" onclick="window.location.href='/joblist'">
-                    Job List <i class="fas fa-list"></i>
-                </button>
-                <button class="dashboard-btn" onclick="window.location.href='/listCandidates'">
-                    Candidates <i class="fas fa-users"></i>
-                </button>
-            </div>
+  {% include 'Navbar.html' %}
+  <main>
+    <div class="dashboard-container">
+
+      <!-- Card container -->
+      <div class="card-container">
+        <div class="dashboard-card">
+          <i class="fas fa-users card-icon"></i>
+          <h3>Total Candidates</h3>
+          <p class="card-number">{{ total_candidates }}</p>
+          <p class="card-subtitle">Registered job seekers</p>
         </div>
 
+        <div class="dashboard-card">
+          <i class="fas fa-user-shield card-icon"></i>
+          <h3>Total Admin Users</h3>
+          <p class="card-number">{{ total_users }}</p>
+          <p class="card-subtitle">Admin users logged in</p>
         </div>
-    </main>
 
-    <!-- <script src="../static/JavaScript/HRcards.js"></script> -->
-    <script>
-        validateToken()
-        async function validateToken() {
-            const token = localStorage.getItem("access_token");
-            if (!token) {
-                alert("Unauthorized access. Please log in.");
-                window.location.href = "/login";
+        <div class="dashboard-card">
+          <i class="fas fa-briefcase card-icon"></i>
+          <h3>Job Postings</h3>
+          <p class="card-number">{{ total_jobs }}</p>
+          <p class="card-subtitle">Open and closed postings</p>
+        </div>
 
-            }
-        }
-    </script>
+        <div class="dashboard-card">
+          <i class="fas fa-file-alt card-icon"></i>
+          <h3>New Applications</h3>
+          <p class="card-number">{{ new_applications }}</p>
+          <p class="card-subtitle">Last 7 days</p>
+        </div>
+
+        <div class="dashboard-card">
+          <i class="fas fa-hourglass-half card-icon"></i>
+          <h3>Pending Approvals</h3>
+          <p class="card-number">{{ pending_approvals }}</p>
+          <p class="card-subtitle">Applications in progress</p>
+        </div>
+      </div>
+    </div>
+  </main>
 </body>
-
 </html>
