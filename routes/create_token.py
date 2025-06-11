@@ -63,7 +63,7 @@ def create_access_token(user_data : dict):
     jwt_token = jwt.encode(encode, secret_key, algorithm=algorithm)
     return jwt_token
 
-#Fucntion to decode the jwt token 
+#Fuction to decode the jwt token 
 def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         print(token,"get_user")

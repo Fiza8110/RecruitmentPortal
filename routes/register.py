@@ -18,7 +18,7 @@ templates = Jinja2Templates(directory='templates')
 route.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Your Google reCAPTCHA Secret Key
-RECAPTCHA_SECRET_KEY = "6LediSkrAAAAAK_weRiuOdghVkwc4OqNoEFwBc5o"
+RECAPTCHA_SECRET_KEY = "6LcgBl0rAAAAAI8n7Tksz4xKlk0ooQob5M-PviG3"
 
 # Route to render the Signup HTML page
 @route.get("/register")
