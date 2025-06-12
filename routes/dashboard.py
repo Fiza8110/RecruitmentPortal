@@ -62,10 +62,15 @@ async def hrDashboard(request: Request):
 
     # New Applications in last 7 days
     last_week = datetime.now() - timedelta(days=7)
-    new_applications = APPLICATION_COL.count_documents({"created_at": {"$gte": last_week}})
+    new_applications = APPLICATION_COL.count_documents({
+       
+        "status": "Applied"
+    })
+   
+    # Pending Approvals with status = "in-progress"
+    pending_approvals = APPLICATION_COL.count_documents({"status": "in-progress"})
 
-    # Pending Approvals (assuming status field has "pending" or "in progress")
-    pending_approvals = APPLICATION_COL.count_documents({"status": {"$in": ["pending", "in progress"]}})
+    rejected_applications = APPLICATION_COL.count_documents({"status": "Rejected"})
 
     return templates.TemplateResponse("HRDashboard.html", {
         "request": request,
@@ -73,7 +78,8 @@ async def hrDashboard(request: Request):
         "total_users": total_users,
         "total_jobs": total_jobs,
         "new_applications": new_applications,
-        "pending_approvals": pending_approvals
+        "pending_approvals": pending_approvals,
+        "rejected_applications": rejected_applications
     })
 # route to render forgot password html page
 @route.get("/forgotPassword")
