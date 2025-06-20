@@ -230,6 +230,7 @@
                         <th>S.No</th>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th> Job Title</th>
                         <th>Email</th>
                         <th>Status</th>
                     </tr>
@@ -394,6 +395,7 @@
                     <td>${serialNumber}</td>
                     <td>${candidate.first_name}</td>
                     <td>${candidate.last_name}</td>
+                    <td>${candidate.job_title}</td>
                     <td>${candidate.email}</td>
                     <td class="status-${candidate.status.toLowerCase().replace(' ', '-')}">${candidate.status}</td>
                 `;

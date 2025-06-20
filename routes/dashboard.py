@@ -386,6 +386,7 @@ async def list_candidates(request: Request):
         "_id": 1,
         "first_name": 1,
         "last_name": 1,
+        "job_title": 1,
         "email": 1,
         "status": 1
     }))
@@ -395,6 +396,7 @@ async def list_candidates(request: Request):
             "_id": str(candidate["_id"]),
             "first_name": candidate.get("first_name", ""),
             "last_name": candidate.get("last_name", ""),
+             "job_title": candidate.get("job_title", ""),
             "email": candidate.get("email", ""),
             "status": candidate.get("status", "")
         }
