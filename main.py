@@ -11,8 +11,8 @@ from starlette.middleware.sessions import SessionMiddleware
 app = FastAPI() # app is the main app object you'll use to define routes, settings, middlewares, etc.
 
 # To use the html folder
-templates = Jinja2Templates(directory='templates') # is used to render HTML templates using the Jinja2 templating engine
- # directory='templates': This tells FastAPI that your HTML files are stored in a folder named templates.
+templates = Jinja2Templates(directory='templates') 
+ 
 # Mount the static folder for css, js, images
 app.mount("/static", StaticFiles(directory = "static"), name = "static")
 # Include the routes 

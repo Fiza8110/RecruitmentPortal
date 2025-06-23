@@ -14,7 +14,8 @@
   {% include 'Navbar.html' %}
  
   <div id="card-container">
-    {% for item in applications_list %}
+    {% for item in applications_list %} 
+    <!-- Each item represents one application record from the list. -->
     <div class="card">
       <h2>{{ item.job_title }}</h2>
       <p><strong>Name:</strong> {{ item.first_name }} {{ item.last_name }}</p>

@@ -298,8 +298,8 @@ async def devtools_stub():
 # to post new job application post action
 @route.post("/postnewjob")
 async def hrDashboard(request: Request, data: dict):#Defines an asynchronous function to handle the request.
-    print(data)#This prints the received job data to the console for debugging purposes.
-    # Python dictionary expected to contain job details
+    print(data)
+   
     # Create new job data
     newjob = {#A dictionary newjob is created using values extracted from the data dictionary.
         "Job_Title": data["Job_Title"],
