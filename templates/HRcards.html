@@ -18,8 +18,8 @@
     <!-- Each item represents one application record from the list. -->
     <div class="card">
       <h2>{{ item.job_title }}</h2>
-      <p><strong>Name:</strong> {{ item.first_name }} {{ item.last_name }}</p>
-      <p> <strong>Email:</strong> {{ item.email }}</p>
+      <p><strong>Name: </strong> {{ item.first_name }} {{ item.last_name }}</p>
+      <p> <strong>Email: </strong> {{ item.email }}</p>
       <p><strong>Experience: </strong> {{item.experience}}</p>
       <button class="apply-btn" onclick="window.location.href='/viewDetails/{{ item._id }}'">View Details</button>
     </div>

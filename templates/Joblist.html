@@ -7,7 +7,6 @@
   <title>Job Listings</title>
   <link rel="stylesheet" href="../static/Css/Dashboard.css">
   <style>
-   
     .modal {
       display: none;
       position: fixed;
@@ -58,7 +57,7 @@
       color: white;
     }
 
-    
+
     .card h2 {
       margin-top: 0;
     }
@@ -98,6 +97,31 @@
     .delete-job-btn {
       background-color: red;
       color: white;
+    }
+
+    @media screen and (max-width: 480px) {
+      .modal-content1 {
+        width: 75%;
+        padding: 15px;
+      }
+
+      .modal-actions {
+        display: flex;
+        flex-direction: row;
+        /* Ensure horizontal layout */
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: nowrap;
+        /* Prevent wrapping */
+      }
+
+      .modal-actions button {
+        flex: 1;
+        min-width: 100px;
+        padding: 10px;
+        font-size: 14px;
+        width:40px;
+      }
     }
   </style>
 </head>
